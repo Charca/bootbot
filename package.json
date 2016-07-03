@@ -1,0 +1,27 @@
+{
+  "name": "bootbot",
+  "version": "1.0.0",
+  "description": "Facebook Messenger Bot Framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Charca/bootbot.git"
+  },
+  "keywords": [
+    "messenger",
+    "bot",
+    "chatbot",
+    "chat",
+    "bot",
+    "facebook"
+  ],
+  "author": "Maxi Ferreira <charca@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Charca/bootbot/issues"
+  },
+  "homepage": "https://github.com/Charca/bootbot#readme"
+}
