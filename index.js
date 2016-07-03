@@ -13,18 +13,46 @@ class BootBot extends EventEmitter {
     this.app_secret = options.app_secret;
     this.app = express();
     this.app.use(bodyParser.json({ verify: this._verifyRequestSignature.bind(this) }));
+    this._hearMap = [];
     this._initWebhook();
   }
 
   start(port) {
     this.app.set('port', port || 3000);
     this.app.listen(this.app.get('port'), () => {
-      console.log('BootBot running on port ', this.app.get('port'));
+      console.log('BootBot running on port', this.app.get('port'));
     });
   }
 
   sendTextMessage(text, recipientId) {
-    this.sendMessage({ text }, recipientId);
+    return this.sendMessage({ text }, recipientId);
+  }
+
+  sendButtonMessage(text, buttons, recipientId) {
+    const message = {
+      'attachment': {
+        'type': 'template',
+        'payload': {
+          'template_type': 'button',
+          'text': text,
+          'buttons': buttons
+        }
+      }
+    };
+    return this.sendMessage(message, recipientId);
+  }
+
+  sendGenericTemplate(cards, recipientId) {
+    const message = {
+      'attachment': {
+        'type': 'template',
+        'payload': {
+          'template_type': 'generic',
+          'elements': cards
+        }
+      }
+    };
+    return this.sendMessage(message, recipientId);
   }
 
   sendMessage(message, recipientId) {
@@ -44,8 +72,28 @@ class BootBot extends EventEmitter {
     .catch(err => console.log(`Error sending message: ${err}`));
   }
 
+  hear(keywords, callback) {
+    keywords = Array.isArray(keywords) ? keywords : [ keywords ];
+    keywords.forEach(keyword => this._hearMap.push({ keyword, callback }));
+  }
+
   _handleEvent(type, event) {
     this.emit(type, event);
+  }
+
+  _handleMessageEvent(event) {
+    const text = event.message.text;
+    if (!text) {
+      return;
+    }
+
+    this._hearMap.forEach(hear => {
+      if (hear.keyword === text || (hear.keyword instanceof RegExp && hear.keyword.test(text))) {
+        return hear.callback.apply(this, [ event ]);
+      }
+    });
+
+    this._handleEvent('message', event);
   }
 
   _initWebhook() {
@@ -71,12 +119,14 @@ class BootBot extends EventEmitter {
           entry.messaging.forEach((event) => {
             if (event.optin) {
               this._handleEvent('authentication', event);
-            } else if (event.message) {
-              this._handleEvent('message', event);
-            } else if (event.delivery) {
-              this._handleEvent('delivery', event);
+            } else if (event.message && event.message.text) {
+              this._handleMessageEvent(event);
+            } else if (event.message && event.message.attachments) {
+              this._handleEvent('attachment', event);
             } else if (event.postback) {
               this._handleEvent('postback', event);
+            } else if (event.delivery) {
+              this._handleEvent('delivery', event);
             } else if (event.read) {
               this._handleEvent('read', event);
             } else {

@@ -15,6 +15,11 @@ bot.on('message', (payload) => {
   bot.sendTextMessage(`Echo: ${text}`, senderId);
 });
 
-bot.start();
+bot.hear(['hello', /hi( there)?/], (payload) => {
+  const text = payload.message.text;
+  const senderId = payload.sender.id;
 
-console.log(process.env.NODE_ENV);
+  bot.sendTextMessage(`Oh! Hello there! You said: ${text}`, senderId);
+});
+
+bot.start();
