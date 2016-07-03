@@ -77,23 +77,31 @@ class BootBot extends EventEmitter {
     keywords.forEach(keyword => this._hearMap.push({ keyword, callback }));
   }
 
-  _handleEvent(type, event) {
-    this.emit(type, event);
+  _handleEvent(type, event, data) {
+    this.emit(type, event, data);
   }
 
   _handleMessageEvent(event) {
     const text = event.message.text;
-    if (!text) {
-      return;
-    }
+    let captured = false;
+    if (!text) { return; }
 
     this._hearMap.forEach(hear => {
-      if (hear.keyword === text || (hear.keyword instanceof RegExp && hear.keyword.test(text))) {
-        return hear.callback.apply(this, [ event ]);
+      if (hear.keyword === text) {
+        captured = true;
+        return hear.callback.apply(this, [event, {
+          keyword: hear.keyword
+        }]);
+      } else if (hear.keyword instanceof RegExp && hear.keyword.test(text)) {
+        captured = true;
+        return hear.callback.apply(this, [event, {
+          keyword: hear.keyword,
+          match: text.match(hear.keyword)
+        }]);
       }
     });
 
-    this._handleEvent('message', event);
+    this._handleEvent('message', event, { captured });
   }
 
   _initWebhook() {
