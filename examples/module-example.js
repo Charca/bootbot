@@ -1,6 +1,8 @@
 'use strict';
 const BootBot = require('../');
 const config = require('config');
+const echoModule = require('./modules/echo');
+const helpModule = require('./modules/help');
 
 const bot = new BootBot({
   access_token: config.get('access_token'),
@@ -8,11 +10,6 @@ const bot = new BootBot({
   app_secret: config.get('app_secret')
 });
 
-bot.on('message', (payload, data) => {
-  const text = payload.message.text;
-  const senderId = payload.sender.id;
-
-  bot.sendTextMessage(`Echo: ${text}`, senderId);
-});
-
+bot.module(echoModule);
+bot.module(helpModule);
 bot.start();
