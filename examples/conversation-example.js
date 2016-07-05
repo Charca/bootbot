@@ -17,15 +17,30 @@ const askName = (convo) => {
     convo.set('name', text);
     convo.say(`Oh, your name is ${text}`).then(() => askFavoriteFood(convo));
   });
-}
+};
 
 const askFavoriteFood = (convo) => {
   convo.ask(`What's your favorite food?`, (payload, data, convo) => {
     const text = payload.message.text;
     convo.set('food', text);
-    convo.say(`Got it, your favorite food is ${text}`).then(() => askAge(convo));
+    convo.say(`Got it, your favorite food is ${text}`).then(() => askGender(convo));
   });
-}
+};
+
+const askGender = (convo) => {
+  convo.ask((convo) => {
+    const buttons = [
+      { type: 'postback', title: 'Male', payload: 'GENDER_MALE' },
+      { type: 'postback', title: 'Female', payload: 'GENDER_FEMALE' },
+      { type: 'postback', title: 'I don\'t wanna say', payload: 'GENDER_UNKNOWN' }
+    ];
+    convo.sendButtonMessage(`Are you a boy or a girl?`, buttons);
+  }, (payload, data, convo) => {
+    const text = payload.message.text;
+    convo.set('gender', text);
+    convo.say(`Great, you are a ${text}`).then(() => askAge(convo));
+  });
+};
 
 const askAge = (convo) => {
   convo.ask(`Final question. How old are you?`, (payload, data, convo) => {
@@ -40,7 +55,7 @@ const askAge = (convo) => {
       convo.end();
     });
   });
-}
+};
 
 bot.hear('hello', (payload, data) => {
   const text = payload.message.text;
