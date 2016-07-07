@@ -34,7 +34,7 @@ const askGender = (convo) => {
       { type: 'postback', title: 'Female', payload: 'GENDER_FEMALE' },
       { type: 'postback', title: 'I don\'t wanna say', payload: 'GENDER_UNKNOWN' }
     ];
-    convo.sendButtonMessage(`Are you a boy or a girl?`, buttons);
+    convo.sendButtonTemplate(`Are you a boy or a girl?`, buttons);
   }, (payload, data, convo) => {
     const text = payload.message.text;
     convo.set('gender', text);
@@ -50,6 +50,7 @@ const askAge = (convo) => {
       convo.say(`Ok, here's what you told me about you:
       - Name: ${convo.get('name')}
       - Favorite Food: ${convo.get('food')}
+      - Gender: ${convo.get('gender')}
       - Age: ${convo.get('age')}
       `);
       convo.end();
@@ -62,7 +63,7 @@ bot.hear('hello', (payload, data) => {
   const senderId = payload.sender.id;
 
   bot.conversation(senderId, (convo) => {
-    askName(convo);
+    bot.sendTypingIndicator(1000, senderId).then(() => askName(convo));
   });
 });
 

@@ -7,6 +7,6 @@ module.exports = (bot) => {
       { type: 'postback', title: 'Settings', payload: 'HELP_SETTINGS' },
       { type: 'postback', title: 'Notifications', payload: 'HELP_NOTIFICATIONS' }
     ];
-    bot.sendButtonMessage(`Need help? Try one of these options`, buttons, senderId);
+    bot.sendButtonTemplate(`Need help? Try one of these options`, buttons, senderId);
   });
 };
