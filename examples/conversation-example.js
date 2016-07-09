@@ -92,7 +92,7 @@ bot.hear('hey', (payload, chat) => {
 bot.hear('color', (payload, chat) => {
   chat.say({
     text: 'Favorite color?',
-    quickReplies: ['Red', 'Blue', 'Green']
+    quickReplies: [ 'Red', 'Blue', 'Green' ]
   });
 });
 
@@ -100,18 +100,14 @@ bot.hear('image', (payload, chat) => {
   chat.say({
     attachment: 'image',
     url: 'http://static3.gamespot.com/uploads/screen_medium/1365/13658182/3067965-overwatch-review-promo-20160523_v2.jpg',
-    quickReplies: ['Red', 'Blue', 'Green']
+    quickReplies: [ 'Red', 'Blue', 'Green' ]
   });
 });
 
 bot.hear('button', (payload, chat) => {
   chat.say({
     text: 'Select a button',
-    buttons: [
-      { type: 'postback', title: 'Male', payload: 'GENDER_MALE' },
-      { type: 'postback', title: 'Female', payload: 'GENDER_FEMALE' },
-      { type: 'postback', title: 'I don\'t wanna say', payload: 'GENDER_UNKNOWN' }
-    ]
+    buttons: [ 'Male', 'Female', `Don't wanna say` ]
   });
 });
 
