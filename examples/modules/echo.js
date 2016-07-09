@@ -1,10 +1,8 @@
 'use strict';
 module.exports = (bot) => {
-  bot.on('message', (payload, data) => {
+  bot.on('message', (payload, chat, data) => {
     const text = payload.message.text;
-    const senderId = payload.sender.id;
-
     if (data.captured) { return; }
-    bot.sendTextMessage(`Echo: ${text}`, senderId);
+    chat.say(`Echo: ${text}`);
   });
 };

@@ -4,15 +4,15 @@ const config = require('config');
 const echoModule = require('./modules/echo');
 
 const bot = new BootBot({
-  access_token: config.get('access_token'),
-  verify_token: config.get('verify_token'),
-  app_secret: config.get('app_secret')
+  accessToken: config.get('access_token'),
+  verifyToken: config.get('verify_token'),
+  appSecret: config.get('app_secret')
 });
 
 bot.module(echoModule);
 
 const askName = (convo) => {
-  convo.ask(`Hello! What's your name?`, (payload, data, convo) => {
+  convo.ask(`Hello! What's your name?`, (payload, convo, data) => {
     const text = payload.message.text;
     convo.set('name', text);
     convo.say(`Oh, your name is ${text}`).then(() => askFavoriteFood(convo));
@@ -20,7 +20,7 @@ const askName = (convo) => {
 };
 
 const askFavoriteFood = (convo) => {
-  convo.ask(`What's your favorite food?`, (payload, data, convo) => {
+  convo.ask(`What's your favorite food?`, (payload, convo, data) => {
     const text = payload.message.text;
     convo.set('food', text);
     convo.say(`Got it, your favorite food is ${text}`).then(() => askGender(convo));
@@ -35,7 +35,7 @@ const askGender = (convo) => {
       { type: 'postback', title: 'I don\'t wanna say', payload: 'GENDER_UNKNOWN' }
     ];
     convo.sendButtonTemplate(`Are you a boy or a girl?`, buttons);
-  }, (payload, data, convo) => {
+  }, (payload, convo, data) => {
     const text = payload.message.text;
     convo.set('gender', text);
     convo.say(`Great, you are a ${text}`).then(() => askAge(convo));
@@ -43,7 +43,7 @@ const askGender = (convo) => {
 };
 
 const askAge = (convo) => {
-  convo.ask(`Final question. How old are you?`, (payload, data, convo) => {
+  convo.ask(`Final question. How old are you?`, (payload, convo, data) => {
     const text = payload.message.text;
     convo.set('age', text);
     convo.say(`That's great!`).then(() => {
@@ -53,17 +53,39 @@ const askAge = (convo) => {
       - Gender: ${convo.get('gender')}
       - Age: ${convo.get('age')}
       `);
+
+      // convo.say('text');
+      // convo.say({
+      //   text: 'text'
+      // });
+      // convo.say({
+      //   text: 'text',
+      //   buttons: []
+      // });
+      // convo.say({
+      //   text: 'text',
+      //   quickReplies: []
+      // });
+      // convo.say({
+      //   attachment: 'video',
+      //   url: 'url',
+      //   quickReplies: []
+      // });
+
       convo.end();
     });
   });
 };
 
-bot.hear('hello', (payload, data) => {
-  const text = payload.message.text;
-  const senderId = payload.sender.id;
+bot.hear('hello', (payload, chat) => {
+  chat.conversation((convo) => {
+    convo.sendTypingIndicator(1000).then(() => askName(convo));
+  });
+});
 
-  bot.conversation(senderId, (convo) => {
-    bot.sendTypingIndicator(1000, senderId).then(() => askName(convo));
+bot.hear('hey', (payload, chat) => {
+  chat.say('Hello friend', { typing: true }).then(() => {
+    return chat.say('So, I’m good at talking about the weather. Other stuff, not so good. If you need help just enter “help.”', { typing: true });
   });
 });
 
