@@ -84,8 +84,34 @@ bot.hear('hello', (payload, chat) => {
 });
 
 bot.hear('hey', (payload, chat) => {
-  chat.say('Hello friend', { typing: true }).then(() => {
-    return chat.say('So, I’m good at talking about the weather. Other stuff, not so good. If you need help just enter “help.”', { typing: true });
+  chat.say('Hello friend', { typing: true }).then(() => (
+    chat.say('So, I’m good at talking about the weather. Other stuff, not so good. If you need help just enter “help.”', { typing: true })
+  ));
+});
+
+bot.hear('color', (payload, chat) => {
+  chat.say({
+    text: 'Favorite color?',
+    quickReplies: ['Red', 'Blue', 'Green']
+  });
+});
+
+bot.hear('image', (payload, chat) => {
+  chat.say({
+    attachment: 'image',
+    url: 'http://static3.gamespot.com/uploads/screen_medium/1365/13658182/3067965-overwatch-review-promo-20160523_v2.jpg',
+    quickReplies: ['Red', 'Blue', 'Green']
+  });
+});
+
+bot.hear('button', (payload, chat) => {
+  chat.say({
+    text: 'Select a button',
+    buttons: [
+      { type: 'postback', title: 'Male', payload: 'GENDER_MALE' },
+      { type: 'postback', title: 'Female', payload: 'GENDER_FEMALE' },
+      { type: 'postback', title: 'I don\'t wanna say', payload: 'GENDER_UNKNOWN' }
+    ]
   });
 });
 
