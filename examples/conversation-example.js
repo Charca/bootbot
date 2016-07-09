@@ -39,7 +39,34 @@ const askGender = (convo) => {
     const text = payload.message.text;
     convo.set('gender', text);
     convo.say(`Great, you are a ${text}`).then(() => askAge(convo));
-  });
+  }, [
+    {
+      event: 'postback',
+      callback: (payload, convo) => {
+        convo.say('You clicked on a button').then(() => askAge(convo));
+      }
+    },
+    {
+      event: 'postback:GENDER_MALE',
+      callback: (payload, convo) => {
+        convo.say('You said you are a Male').then(() => askAge(convo));
+      }
+    },
+    {
+      event: 'quick_reply',
+      callback: () => {}
+    },
+    {
+      event: 'quick_reply:COLOR_BLUE',
+      callback: () => {}
+    },
+    {
+      pattern: ['yes', /yea(h)?/i, 'yup'],
+      callback: () => {
+        convo.say('You said YES!').then(() => askAge(convo));
+      }
+    }
+  ]);
 };
 
 const askAge = (convo) => {
@@ -53,25 +80,6 @@ const askAge = (convo) => {
       - Gender: ${convo.get('gender')}
       - Age: ${convo.get('age')}
       `);
-
-      // convo.say('text');
-      // convo.say({
-      //   text: 'text'
-      // });
-      // convo.say({
-      //   text: 'text',
-      //   buttons: []
-      // });
-      // convo.say({
-      //   text: 'text',
-      //   quickReplies: []
-      // });
-      // convo.say({
-      //   attachment: 'video',
-      //   url: 'url',
-      //   quickReplies: []
-      // });
-
       convo.end();
     });
   });
@@ -108,6 +116,28 @@ bot.hear('button', (payload, chat) => {
   chat.say({
     text: 'Select a button',
     buttons: [ 'Male', 'Female', `Don't wanna say` ]
+  });
+});
+
+bot.hear('convo', (payload, chat) => {
+  chat.conversation(convo => {
+    convo.ask({
+      text: 'Favorite color?',
+      quickReplies: [ 'Red', 'Blue', 'Green' ]
+    }, (payload, convo) => {
+      const text = payload.message.text;
+      convo.say(`Oh your favorite color is ${text}, cool!`);
+      convo.end();
+    }, [
+      {
+        event: 'quick_reply',
+        callback: (payload, convo) => {
+          const text = payload.message.text;
+          convo.say(`Thanks for choosing one of the options. Your favorite color is ${text}`);
+          convo.end();
+        }
+      }
+    ]);
   });
 });
 
