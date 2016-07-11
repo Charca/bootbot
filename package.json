@@ -4,7 +4,7 @@
   "description": "Facebook Messenger Bot Framework",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --recursive test/**/*",
+    "test": "mocha --recursive test/*",
     "test:watch": "npm test -- --watch"
   },
   "repository": {
@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "^2.5.3"
+    "mocha": "^2.5.3",
+    "sinon": "^1.17.4"
   }
 }

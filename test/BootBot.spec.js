@@ -1,12 +1,13 @@
+'use strict';
 const expect = require('chai').expect;
 const BootBot = require('../lib/BootBot');
 
 describe('BootBot', () => {
   it('creates a bot instance', () => {
     const options = {
-      access_token: '1234',
-      verify_token: '5678',
-      app_secret: 'foobar'
+      accessToken: '1234',
+      verifyToken: '5678',
+      appSecret: 'foobar'
     };
 
     const bot = new BootBot(options);
