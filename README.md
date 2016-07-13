@@ -4,8 +4,8 @@
 
 BootBot is a simple but powerful JavaScript Framework to build Facebook Messenger's Chat bots.
 
-| [Features][] | [Usage][] | [Video Overview][] | [Documentation][] | [Examples][] | [Credits][] | [License][] |
-|---|---|---|---|---|---|---|
+| [Features][] | [Usage][] | [Video Overview][] | [Getting Started][] | [Documentation][] | [Examples][] | [Credits][] | [License][] |
+|---|---|---|---|---|---|---|---|
 
 ## Features
 
@@ -25,7 +25,7 @@ $ npm install bootbot --save
 
 ```javascript
 'use strict';
-const BootBot = require('../');
+const BootBot = require('bootbot');
 
 const bot = new BootBot({
   accessToken: 'FB_ACCESS_TOKEN',
@@ -41,9 +41,132 @@ bot.on('message', (payload, chat) => {
 bot.start();
 ```
 
-## Video Overwview
+## Video Overview
 
 ![IMG]()
+
+## Getting Started
+
+- Install BootBot via NPM, create a new `index.js`, require BootBot and create a new bot instance using your Facebook Page's / App's `accessToken`, `verifyToken` and `appSecret`:
+
+```javascript
+// index.js
+'use strict';
+const BootBot = require('bootbot');
+
+const bot = new BootBot({
+  accessToken: 'FB_ACCESS_TOKEN',
+  verifyToken: 'FB_VERIFY_TOKEN',
+  appSecret: 'FB_APP_SECRET'
+});
+```
+
+- Subscribe to messages sent by the user with the `bot.on()` and `bot.hear()` methods:
+
+```javascript
+bot.on('message', (payload, chat) => {
+	const text = payload.message.text;
+	console.log(`The user said: ${text}`);
+});
+
+bot.hear(['hello', 'hi', /hey( there)?/i], (payload, chat) => {
+	console.log('The user said "hello", "hi", "hey", or "hey there"');
+});
+```
+
+- Reply to user messages using the `chat` object:
+
+```javascript
+bot.hear(['hello', 'hi', /hey( there)?/i], (payload, chat) => {
+	// Send a text message followed by another text message that contains a typing indicator
+	chat.say('Hello, human friend!').then(() => {
+		chat.say('How are you today?', { typing: true });
+	});
+});
+
+bot.hear(['food', 'hungry'], (payload, chat) => {
+	// Send a text message with quick replies
+	chat.say({
+		text: 'What do you want to eat today?',
+		quickReplies: ['Mexican', 'Italian', 'American', 'Argentine']
+	});
+});
+
+bot.hear(['help'], (payload, chat) => {
+	// Send a text message with buttons
+	chat.say({
+		text: 'What do you need help with?',
+		buttons: [
+			{ type: 'postback', title: 'Settings', payload: 'HELP_SETTINGS' },
+			{ type: 'postback', title: 'FAQ', payload: 'HELP_FAQ' },
+			{ type: 'postback', title: 'Talk to a human', payload: 'HELP_HUMAN' }
+		]
+	});
+});
+
+bot.hear('image', (payload, chat) => {
+	// Send an attachment
+	chat.say({
+		attachment: 'image',
+		url: 'http://example.com/image.png'
+	});
+});
+```
+
+- Start a conversation and keep the user's answers in `context`:
+
+```javascript
+bot.hear('ask me something', (payload, chat) => {
+	chat.conversation((convo) => {
+		askName(convo);
+	});
+	
+	const askName = (convo) => {
+		convo.ask(`What's your name?`, (payload, convo) => {
+			const text = payload.message.text;
+			convo.set('name', text);
+			convo.say(`Oh, your name is ${text}`).then(() => askFavoriteFood(convo));
+		});
+	};
+	
+	const askFavoriteFood = (convo) => {
+		convo.ask(`What's your favorite food?`, (payload, convo) => {
+			const text = payload.message.text;
+			convo.set('food', text);
+			convo.say(`Got it, your favorite food is ${text}`).then(() => sendSummary(convo));
+		});
+	};
+	
+	const sendSummary = (convo) => {
+		convo.say(`Ok, here's what you told me about you:
+	      - Name: ${convo.get('name')}
+	      - Favorite Food: ${convo.get('food')}`);
+      convo.end();
+	};
+});
+```
+
+- Set up webhooks and start the express server:
+
+```
+bot.start();
+```
+
+- Start up your bot by running node:
+
+```
+$ node index.js
+> BootBot running on port 3000
+> Facebook Webhook running on localhost:3000/webhook
+```
+
+- If you want to test your bot locally, install a localhost tunnel like [ngrok](https://ngrok.com/) and run it on your bot's port:
+
+```
+$ ngrok http 3000
+```
+
+Then use the provided HTTPS URL to config your webhook on Facebook's Dashboard. For example if the URL provided by ngrok is `https://99b8d4c2.ngrok.io`, use `https://99b8d4c2.ngrok.io/webhook`.
 
 ## Documentation
 
@@ -71,6 +194,8 @@ Starts the express server on the specified port. Defaults port to 3000.
 #### `.close()`
 
 Closes the express server (calls `.close()` on the server instance).
+
+---
 
 ### Receive API
 
@@ -107,7 +232,7 @@ When these events ocurr, the specified callback will be invoked with 3 params: `
 | `chat` | A `Chat` instance that you can use to reply to the user. Contains all the methods defined in the [Send API](#send-api) |
 | `data` | Contains extra data provided by the framework, like a `captured` flag that signals if this message was already captured by a different callback |
 
-##### Examples:
+##### `.on()` examples:
 
 ```javascript
 bot.on('message', (payload, chat) => {
@@ -158,9 +283,11 @@ bot.hear([/(good)?bye/i, /see (ya|you)/i, 'adios'], (payload, chat) => {
 
 **Note** that if a bot is subscribed to both the `message` event using the `.on()` method and a specific keyword using the `.hear()` method, the event will be emitted to both of those subscriptions. If you want to know if a message event was already captured by a different subsciption, you can check for the `data.captured` flag on the callback.
 
+---
+
 ### Send API
 
-BootBot provides helper methods for every type of message supported by Facebook's Messenger API. It also provides a generic `sendMessage` method that you can use to send a custom payload.
+BootBot provides helper methods for every type of message supported by Facebook's Messenger API. It also provides a generic `sendMessage` method that you can use to send a custom payload. All messages from the Send API return a Promise that you can use to apply actions after a message was successfully sent. You can use this to send consecutive messages and ensure that they're sent in the right order.
 
 #### Important Note:
 The Send API methods are shared between the `BootBot`, `Chat` and `Conversation` instances, the only difference is that when you use any of these methods from the `Chat` or `Conversation` instances, you don't have to specify the `userId`.
@@ -199,9 +326,103 @@ The `message` param can be a string or an object:
 - If `message` is a string, the bot will send a text message.
 - If `message` is an object, the message type will depend on the object's format:
 
+```javascript
+// Send a text message
+chat.say('Hello world!');
+
+// Send a text message with quick replies
+chat.say({
+	text: 'Favorite color?',
+	quickReplies: ['Red', 'Blue', 'Green']
+});
+
+// Send a button template
+chat.say({
+	text: 'Favorite color?',
+	buttons: [
+		{ type: 'postback', title: 'Red', payload: 'FAVORITE_RED' },
+		{ type: 'postback', title: 'Blue', payload: 'FAVORITE_BLUE' },
+		{ type: 'postback', title: 'Green', payload: 'FAVORITE_GREEN' }
+	]
+});
+
+// Send an attachment
+chat.say({
+	attachment: 'video',
+	url: 'http://example.com/video.mp4'
+});
+```
+
+The `options` param can contain:
+
+| `options` key | Type | Default | Description |
+|:--------------|:-----|:--------|:---------|
+| `typing` | boolean or number | `false` | Send a typing indicator before sending the message. If set to `true`, it will automatically calculate how long it lasts based on the message length. If it's a number, it will show the typing indicator for that amount of milliseconds (max. `20000` - 20 seconds) |
+| `onDelivery` | function | | Callback that will be executed when the message is received by the user. Receives params: `(payload, chat, data)` |
+| `onRead` | function | | Callback that will be executed when the message is read by the user. Receives params: `(payload, chat, data)` |
+
 #### `.sendTextMessage()`
 
-TBD
+| Method signature |
+|:-----------------|
+| `chat.sendTextMessage(text, [ quickReplies, options ])` |
+| `convo.sendTextMessage(text, [ quickReplies, options ])` |
+| `bot.sendTextMessage(userId, text, [ quickReplies, options ])` |
+
+The `text` param must be a string containing the message to be sent.
+
+The `quickReplies` param can be an array of strings or quick_reply objects.
+
+The `options` param is identical to the `options` param of the [`.say()`](#say) method.
+
+#### `.sendButtonTemplate()`
+
+| Method signature |
+|:-----------------|
+| `chat.sendButtonTemplate(text, buttons, [ options ])` |
+| `convo.sendButtonTemplate(text, buttons, [ options ])` |
+| `bot.sendButtonTemplate(userId, text, buttons, [ options ])` |
+
+The `text` param must be a string containing the message to be sent.
+
+The `buttons` param can be an array of strings or quick_reply objects.
+
+The `options` param is identical to the `options` param of the [`.say()`](#say) method.
+
+#### `.getUserProfile()`
+
+---
+
+### Conversations
+
+---
+
+### Modules
+
+Modules are simple functions that you can use to organize your code in different files and folders.
+
+#### `.module(factory)`
+
+The `factory` param is a function that gets called immediatly and receives the `bot` instance as its only parameter. For example:
+
+```javascript
+// help-module.js
+module.exports = (bot) => {
+	bot.hear('help', (payload, chat) => {
+		// Send Help Menu to the user...
+	});
+};
+
+// index.js
+const helpModule = require('./help-module');
+bot.module(helpModule);
+```
+
+Take a look at the `examples/module-example.js` file for a complete example.
+
+---
+
+### Threads
 
 ## Examples
 
@@ -213,9 +434,16 @@ Check the `examples` directory to see more demos of:
 - How to use threads to set a Persistent Menu or a Get Started CTA
 - How to get the user's profile information
 
+To run the examples, make sure to complete the `examples/config/default.json` file with your bot's tokens, and then cd into the `examples` folder and run the desired example with node. For example:
+
+```
+$ cd examples
+$ node echo-example.js
+```
+
 ## Credits
 
-Made with (heart emoji) by Maxi Ferreira - [@Charca](https://twitter.com/charca)
+Made with :beer: by Maxi Ferreira - [@Charca](https://twitter.com/charca)
 
 ## License
 
@@ -224,6 +452,7 @@ MIT
 [Features]:#features
 [Usage]:#usage
 [Video Overview]:#video-overview
+[Getting Started]:#getting-started
 [Documentation]:#documentation
 [Examples]:#examples
 [Credits]:#credits
