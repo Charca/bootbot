@@ -4,7 +4,7 @@
 
 BootBot is a simple but powerful JavaScript Framework to build Facebook Messenger's Chat bots.
 
-| [Features][] | [Usage][] | [Video Overview][] | [Getting Started][] | [Documentation][] | [Examples][] | [Credits][] | [License][] |
+| [Features][] | [Usage][] | [Video Example][] | [Getting Started][] | [Documentation][] | [Examples][] | [Credits][] | [License][] |
 |---|---|---|---|---|---|---|---|
 
 ## Features
@@ -41,9 +41,11 @@ bot.on('message', (payload, chat) => {
 bot.start();
 ```
 
-## Video Overview
+## Video Example
 
-![IMG]()
+Creating a Giphy Chat Bot in 3 minutes:
+
+[![IMG](http://i.imgur.com/gDL7Tw2.gif)](https://www.youtube.com/watch?v=flYeg7Hdxzw&feature=youtu.be)
 
 ## Getting Started
 
@@ -389,11 +391,64 @@ The `buttons` param can be an array of strings or quick_reply objects.
 
 The `options` param is identical to the `options` param of the [`.say()`](#say) method.
 
+#### `.sendGenericTemplate()`
+
+#### `.sendTemplate()`
+
+#### `.sendAttachment()`
+
+#### `.sendAction()`
+
+#### `.sendMessage()`
+
+#### `.sendTypingIndicator()`
+
 #### `.getUserProfile()`
 
 ---
 
 ### Conversations
+
+Conversations provide a convinient method to ask questions and handle the user's answer. They're useful when you want to set a flow of different questions/answers, like an onboarding process or when taking an order for example. Conversations also provide a method to save the information that you need from the user's answers, so the interaction is always in context.
+
+Messages sent by the user won't trigger a global `message`, `postback`, `attachment` or `quick_reply` event if there's an active conversation with that user. Answers must be managed by the conversation.
+
+#### `bot.conversation()`
+
+| Method signature |
+|:-----------------|
+| `chat.conversation(factory)` |
+| `bot.sendButtonTemplate(userId, factory)` |
+
+Starts a new conversation with the user.
+
+The `factory` param must be a function that is executed immediately receiving the `convo` instance as it's only param:
+
+```
+bot.on('hello', (payload, chat) => {
+	chat.conversation((convo) => {
+		// convo is available here...
+		convo.ask( ... );
+	});
+});
+```
+
+#### `convo.ask(question, answer, [ callbacks, options ])`
+
+| Param | Type | Default | Required |
+|:------|:-----|:--------|:---------|
+| `question` | string, object or function | | `Y` |
+| `answer` | function | | `Y` |
+| `callbacks` | array | | `N` |
+| `options` | object | | `N` |
+
+
+
+#### `convo.set(property, value)`
+
+#### `convo.get(property)`
+
+#### `convo.end()`
 
 ---
 
@@ -424,6 +479,16 @@ Take a look at the `examples/module-example.js` file for a complete example.
 
 ### Threads
 
+#### `.setGreetingText()`
+
+#### `.setGetStartedButton()`
+
+#### `.deleteGetStartedButton()`
+
+#### `.setPersistentMenu()`
+
+#### `.deletePersistentMenu()`
+
 ## Examples
 
 Check the `examples` directory to see more demos of:
@@ -451,7 +516,7 @@ MIT
 
 [Features]:#features
 [Usage]:#usage
-[Video Overview]:#video-overview
+[Video Example]:#video-example
 [Getting Started]:#getting-started
 [Documentation]:#documentation
 [Examples]:#examples
