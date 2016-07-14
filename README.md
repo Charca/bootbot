@@ -266,7 +266,7 @@ A convinient method to subscribe to `message` events containing specific keyword
 
 The callback's signature is identical to that of the `.on()` method above.
 
-##### Examples:
+##### `.hear()` examples:
 
 ```javascript
 bot.hear('hello', (payload, chat) => {
@@ -373,7 +373,7 @@ The `options` param can contain:
 
 The `text` param must be a string containing the message to be sent.
 
-The `quickReplies` param can be an array of strings or quick_reply objects.
+The `quickReplies` param can be an array of strings or [quick_reply objects](https://developers.facebook.com/docs/messenger-platform/send-api-reference/quick-replies).
 
 The `options` param is identical to the `options` param of the [`.say()`](#say) method.
 
@@ -387,23 +387,105 @@ The `options` param is identical to the `options` param of the [`.say()`](#say) 
 
 The `text` param must be a string containing the message to be sent.
 
-The `buttons` param can be an array of strings or quick_reply objects.
+The `buttons` param can be an array of strings or [button objects](https://developers.facebook.com/docs/messenger-platform/send-api-reference/button-template).
 
 The `options` param is identical to the `options` param of the [`.say()`](#say) method.
 
 #### `.sendGenericTemplate()`
 
+| Method signature |
+|:-----------------|
+| `chat.sendGenericTemplate(elements, [ options ])` |
+| `convo.sendGenericTemplate(elements, [ options ])` |
+| `bot.sendGenericTemplate(userId, elements, [ options ])` |
+
+The `elements` param must be an array of [element objects](https://developers.facebook.com/docs/messenger-platform/send-api-reference/generic-template).
+
+The `options` param is identical to the `options` param of the [`.say()`](#say) method.
+
 #### `.sendTemplate()`
+
+| Method signature |
+|:-----------------|
+| `chat.sendTemplate(payload, [ options ])` |
+| `convo.sendTemplate(payload, [ options ])` |
+| `bot.sendTemplate(userId, payload, [ options ])` |
+
+Use this method if you want to send a custom template `payload`, like a [receipt template](https://developers.facebook.com/docs/messenger-platform/send-api-reference/receipt-template) or an [airline itinerary template](https://developers.facebook.com/docs/messenger-platform/send-api-reference/airline-itinerary-template).
+
+The `options` param is identical to the `options` param of the [`.say()`](#say) method.
 
 #### `.sendAttachment()`
 
+| Method signature |
+|:-----------------|
+| `chat.sendAttachment(type, url, [ quickReplies, options ])` |
+| `convo.sendAttachment(type, url, [ quickReplies, options ])` |
+| `bot.sendAttachment(userId, type, url, [ quickReplies, options ])` |
+
+The `type` param must be `'image'`, `'audio'`, `'video'` or `'file'`.
+
+The `url` param must be a string with the URL of the attachment.
+
+The `quickReplies` param can be an array of strings or [quick_reply objects](https://developers.facebook.com/docs/messenger-platform/send-api-reference/quick-replies).
+
+The `options` param is identical to the `options` param of the [`.say()`](#say) method.
+
 #### `.sendAction()`
+
+| Method signature |
+|:-----------------|
+| `chat.sendAction(action, [ options ])` |
+| `convo.sendAction(action, [ options ])` |
+| `bot.sendAction(userId, action, [ options ])` |
+
+The `action` param must be `'mark_seen'`, `'typing_on'` or `'typing_off'`. To send a typing indicator in a more convenient way, see the [`.sendTypingIndicator`](#sendtypingindicator) method.
+
+The `options` param is identical to the `options` param of the [`.say()`](#say) method.
 
 #### `.sendMessage()`
 
+| Method signature |
+|:-----------------|
+| `chat.sendMessage(message, [ options ])` |
+| `convo.sendMessage(message, [ options ])` |
+| `bot.sendMessage(userId, message, [ options ])` |
+
+Use this method if you want to send a custom `message` object.
+
+The `options` param is identical to the `options` param of the [`.say()`](#say) method.
+
 #### `.sendTypingIndicator()`
 
+| Method signature |
+|:-----------------|
+| `chat.sendTypingIndicator(milliseconds)` |
+| `convo.sendTypingIndicator(milliseconds)` |
+| `bot.sendTypingIndicator(userId, milliseconds)` |
+
+Convinient method to send a `typing_on` action and then a `typing_off` action after `milliseconds` to simulate the bot is actually typing. Max value is 20000 (20 seconds).
+
+You can also use this method via the `typing` option (see [`.say()`](#say) method).
+
 #### `.getUserProfile()`
+
+| Method signature |
+|:-----------------|
+| `chat.getUserProfile()` |
+| `convo.getUserProfile()` |
+| `bot.getUserProfile(userId)` |
+
+This method is not technically part of the "Send" API, but it's listed here because it's also shared between the `bot`, `chat` and `convo` instances.
+
+Returns a Promise that contains the user's [profile information](https://developers.facebook.com/docs/messenger-platform/user-profile).
+
+```javascript
+bot.hear('hello', (payload, chat) => {
+  chat.getUserProfile().then((user) => {
+    chat.say(`Hello, ${user.first_name}!`);
+  });
+});
+```
 
 ---
 
@@ -442,13 +524,82 @@ bot.on('hello', (payload, chat) => {
 | `callbacks` | array | | `N` |
 | `options` | object | | `N` |
 
+If `question` is a string or an object, the `.say()` method will be invoked immediately with that string or object, if it's a function it will also be invoked immedately with the `convo` instance as its only param.
 
+The `answer` param must be a function that receives the `payload`, `convo` and `data` params (similar to the callback function of the `.on()` or `.hear()` methods, except it receives the `convo` instance instead of the `chat` instance). The `answer` function will be called whenever the user replies to the `question` with a text message or quick reply.
+
+The `callbacks` array can be used to listen to specific types of answers to the `question`. You can listen for `postback`, `quick_reply` and `attachment` events, or you can match a specific text `pattern`. See example bellow:
+
+The `options` param is identical to the `options` param of the [`.say()`](#say) method.
+
+##### `convo.ask()` example:
+
+```javascript
+const question = {
+	text: `What's your favorite color?`,
+	quickReplies: ['Red', 'Green', 'Blue']
+};
+
+const answer = (payload, convo) => {
+	const text = payload.message.text;
+	convo.say(`Oh, you like ${text}!`);
+};
+
+const callbacks = [
+	{
+		event: 'quick_reply',
+		callback: () => { /* User replied using a quick reply */ }
+	},
+	{
+		event: 'attachment',
+		callback: () => { /* User replied with an attachment */ }
+	},
+	{
+		pattern: ['black', 'white'],
+		callback: () => { /* User said "black" or "white" */ }
+	}
+];
+
+const options = {
+	typing: true // Send a typing indicator before asking the question
+};
+
+convo.ask(question, answer, callback, options);
+```
 
 #### `convo.set(property, value)`
 
+| Param | Type | Default | Required |
+|:------|:-----|:--------|:---------|
+| `property` | string | | `Y` |
+| `value` | mixed | | `Y` |
+
+Save a value in the conversation's context. This value will be available in all subsequent questions and answers that are part of this conversation, but the values are lost once the conversation ends.
+
+```javascript
+convo.question(`What's your favorite color?`, (payload, convo) => {
+	const text = payload.message.text;
+
+	// Save the user's answer in the conversation's context.
+	// You can then call convo.get('favoriteColor') in a future question or answer to retrieve the value.
+	convo.set('favoriteColor', text);
+	convo.say(`Oh, you like ${text}!`);
+});
+```
+
 #### `convo.get(property)`
 
+| Param | Type | Default | Required |
+|:------|:-----|:--------|:---------|
+| `property` | string | | `Y` |
+
+Retrieve a value from the conversation's context.
+
 #### `convo.end()`
+
+Ends a conversation, giving control back to the `bot` instance. All `.on()` and `.hear()` listeners are now back in action. After you end a conversation the values that you saved using the `convo.set()` method are now lost.
+
+You must call `convo.end()` after you no longer wish to interpret user's messages as `answer`s to one of your `questions`. If you don't, and a message is received with no `answer` callback listening, the conversation will be ended automatically.
 
 ---
 
@@ -479,21 +630,50 @@ Take a look at the `examples/module-example.js` file for a complete example.
 
 ### Threads
 
-#### `.setGreetingText()`
+#### `.setGreetingText(text)`
 
-#### `.setGetStartedButton()`
+[Facebook Docs](https://developers.facebook.com/docs/messenger-platform/thread-settings/greeting-text)
+
+| Param | Type | Default | Required |
+|:------|:-----|:--------|:---------|
+| `text` | string | | `Y` |
+
+Set a greeting text for new conversations. The Greeting Text is only rendered the first time the user interacts with a the Page on Messenger.
+
+#### `.setGetStartedButton(action)`
+
+[Facebook Docs](https://developers.facebook.com/docs/messenger-platform/thread-settings/get-started-button)
+
+| Param | Type | Default | Required |
+|:------|:-----|:--------|:---------|
+| `action` | string or function | | `Y` |
+
+React to a user starting a conversation with the bot by clicking the Get Started button. If `action` is a string, the Get Started button postback will be set to that string. If it's a function, that callback will be executed when a user clicks the Get Started button.
 
 #### `.deleteGetStartedButton()`
 
-#### `.setPersistentMenu()`
+Removes the Get Started button call to action.
+
+#### `.setPersistentMenu(buttons)`
+
+[Facebook Docs](https://developers.facebook.com/docs/messenger-platform/thread-settings/persistent-menu)
+
+| Param | Type | Default | Required |
+|:------|:-----|:--------|:---------|
+| `buttons` | array of strings or objects | | `Y` |
+
+Creates a Persistent Menu that is available at any time during the conversation. The `buttons` param can be an array of strings or button objects.
 
 #### `.deletePersistentMenu()`
+
+Removes the Persistent Menu.
 
 ## Examples
 
 Check the `examples` directory to see more demos of:
 
 - An echo bot
+- A bot that searches for random gifs
 - An example conversation with questions and answers
 - How to organize your code using modules
 - How to use threads to set a Persistent Menu or a Get Started CTA
