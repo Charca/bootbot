@@ -68,6 +68,20 @@ describe('Conversation', () => {
     expect(answer.calledWith(payload, convo, data)).to.equal(true);
   });
 
+  it(`ignores an answer if the question hasn't been asked yet`, () => {
+    const answer = sinon.spy();
+    const payload = { message: { text: 'My name is Maxi' } };
+    const data = { type: 'message' };
+    const response = convo.respond(payload, data);
+    expect(response).to.equal(undefined);
+    expect(convo.isActive()).to.equal(true);
+    expect(convo.isWaitingForAnswer()).to.equal(false);
+    convo.ask(`What's your name?`, answer);
+    expect(convo.isWaitingForAnswer()).to.equal(true);
+    convo.respond(payload, data);
+    expect(answer.calledWith(payload, convo, data)).to.equal(true);
+  });
+
   it('responds to a message using the callback array', () => {
     const question = {
       text: `What's your favorite color?`,
