@@ -48,6 +48,103 @@ describe('BootBot', () => {
     expect(spy.calledWith(expected)).to.equal(true);
   });
 
+  it('can send a text message with quick replies', () => {
+    const spy = sinon.spy(bot, 'sendRequest');
+    const text = 'Hello world!';
+
+    // Quick Replies as strings with auto-generated payload
+    const quickReplies1 = ['Red', 'Green', 'Blue'];
+    const expected1 = {
+      recipient: {
+        id: userId
+      },
+      message: {
+        text,
+        quick_replies: [{
+          content_type: 'text',
+          title: 'Red',
+          payload: 'BOOTBOT_QR_RED'
+        }, {
+          content_type: 'text',
+          title: 'Green',
+          payload: 'BOOTBOT_QR_GREEN'
+        }, {
+          content_type: 'text',
+          title: 'Blue',
+          payload: 'BOOTBOT_QR_BLUE'
+        }]
+      }
+    };
+
+    bot.sendTextMessage(userId, text, quickReplies1);
+    expect(spy.calledWith(expected1)).to.equal(true);
+
+    // Quick Replies as objects with partial information
+    const quickReplies2 = [{
+      title: 'Purple'
+    }, {
+      title: 'Yellow',
+      payload: 'CUSTOM_YELLOW'
+    }, {
+      title: 'Image',
+      image_url: 'http://google.com/image.png'
+    }];
+    const expected2 = {
+      recipient: {
+        id: userId
+      },
+      message: {
+        text,
+        quick_replies: [{
+          content_type: 'text',
+          title: 'Purple',
+          payload: 'BOOTBOT_QR_PURPLE'
+        }, {
+          content_type: 'text',
+          title: 'Yellow',
+          payload: 'CUSTOM_YELLOW'
+        }, {
+          content_type: 'text',
+          title: 'Image',
+          payload: 'BOOTBOT_QR_IMAGE',
+          image_url: 'http://google.com/image.png'
+        }]
+      }
+    };
+
+    bot.sendTextMessage(userId, text, quickReplies2);
+    expect(spy.calledWith(expected2)).to.equal(true);
+
+    // Quick Replies as custom object
+    const quickReplies3 = [{
+      content_type: 'location'
+    }, {
+      content_type: 'bootbot',
+      payload: 'THIS_IS_JUST_A_TEST'
+    }, {
+      foo: 'bar'
+    }];
+    const expected3 = {
+      recipient: {
+        id: userId
+      },
+      message: {
+        text,
+        quick_replies: [{
+          content_type: 'location'
+        }, {
+          content_type: 'bootbot',
+          payload: 'THIS_IS_JUST_A_TEST'
+        }, {
+          foo: 'bar'
+        }]
+      }
+    };
+
+    bot.sendTextMessage(userId, text, quickReplies3);
+    expect(spy.calledWith(expected3)).to.equal(true);
+  });
+
   it('can send a button template', () => {
     const spy = sinon.spy(bot, 'sendRequest');
     const text = 'Choose an option';
