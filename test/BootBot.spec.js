@@ -177,19 +177,19 @@ describe('BootBot', () => {
     const spy = sinon.spy(bot, 'sendRequest');
     const elements = [
       {
-        "title":"Welcome to Peter\'s Hats",
-        "image_url":"http://petersapparel.parseapp.com/img/item100-thumb.png",
-        "subtitle":"We\'ve got the right hat for everyone.",
-        "buttons":[
+        "title": "Welcome to Peter\'s Hats",
+        "image_url": "http://petersapparel.parseapp.com/img/item100-thumb.png",
+        "subtitle": "We\'ve got the right hat for everyone.",
+        "buttons": [
           {
-            "type":"web_url",
-            "url":"https://petersapparel.parseapp.com/view_item?item_id=100",
-            "title":"View Website"
+            "type": "web_url",
+            "url": "https://petersapparel.parseapp.com/view_item?item_id=100",
+            "title": "View Website"
           },
           {
-            "type":"postback",
-            "title":"Start Chatting",
-            "payload":"USER_DEFINED_PAYLOAD"
+            "type": "postback",
+            "title": "Start Chatting",
+            "payload": "USER_DEFINED_PAYLOAD"
           }
         ]
       }
@@ -233,5 +233,84 @@ describe('BootBot', () => {
 
     bot.sendAttachment(userId, type, url);
     expect(spy.calledWith(expected)).to.equal(true);
+  });
+
+  describe('_handleEvent', () => {
+    let pageId = 123456;
+
+    it('should set optin origin to send_to_messenger when sender exists', () => {
+      const type = 'authentication';
+      const event = {
+        sender: {
+          id: userId
+        },
+        recipient: {
+          id: pageId
+        },
+        timestamp: 1234567890,
+        optin: {
+          ref: 'PASS_THROUGH_PARAM'
+        }
+      };
+
+      bot._handleEvent(type, event);
+      expect(bot.optinOrigin).to.equal('send_to_messenger');
+    });
+
+    it('should set optin origin to checkbox_plugin when sender not exists', () => {
+      const type = 'authentication';
+      const event = {
+        recipient: {
+          id: pageId
+        },
+        timestamp: 1234567890,
+        optin: {
+          ref: "PASS_THROUGH_PARAM",
+          user_ref: userId
+        }
+      }
+
+      bot._handleEvent(type, event);
+      expect(bot.optinOrigin).to.equal('checkbox_plugin');
+    });
+
+    it('optin origin should be null when tpye is not authentication', () => {
+      const type = 'read';
+      const event = {
+        sender: {
+          id: userId
+        },
+        recipient: {
+          id: pageId
+        },
+        timestamp: 1234567890,
+        optin: {
+          ref: 'PASS_THROUGH_PARAM'
+        }
+      };
+
+      bot._handleEvent(type, event);
+      expect(bot.optinOrigin).to.be.null;
+    });
+
+    it('should call emit once', () => {
+      const spy = sinon.spy(bot, 'emit');
+      const type = 'read';
+      const event = {
+        sender: {
+          id: userId
+        },
+        recipient: {
+          id: pageId
+        },
+        timestamp: 1234567890,
+        optin: {
+          ref: 'PASS_THROUGH_PARAM'
+        }
+      };
+
+      bot._handleEvent(type, event);
+      expect(spy.calledOnce).to.equal(true);
+    });
   });
 });
