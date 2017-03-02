@@ -235,82 +235,51 @@ describe('BootBot', () => {
     expect(spy.calledWith(expected)).to.equal(true);
   });
 
-  describe('_handleEvent', () => {
-    let pageId = 123456;
-
-    it('should set optin origin to send_to_messenger when sender exists', () => {
-      const type = 'authentication';
+  describe('Checkbox Plugin support', () => {
+    it('uses the user_ref param as the recipient when replying to a checkbox authentication event', () => {
+      const spy = sinon.spy(bot, 'sendMessage');
       const event = {
-        sender: {
-          id: userId
+        "recipient": {
+          "id": "PAGE_ID"
         },
-        recipient: {
-          id: pageId
-        },
-        timestamp: 1234567890,
-        optin: {
-          ref: 'PASS_THROUGH_PARAM'
+        "timestamp": 1234567890,
+        "optin": {
+          "ref": "PASS_THROUGH_PARAM",
+          "user_ref": "UNIQUE_REF_PARAM"
         }
       };
+      const expectedRecipient = { user_ref: 'UNIQUE_REF_PARAM' };
+      const expectedMessage = { text: 'hello' };
 
-      bot._handleEvent(type, event);
-      expect(bot.optinOrigin).to.equal('send_to_messenger');
+      bot.on('authentication', (payload, chat) => {
+        chat.say('hello');
+      });
+      bot._handleEvent('authentication', event);
+      expect(spy.calledWith(expectedRecipient, expectedMessage)).to.equal(true);
     });
 
-    it('should set optin origin to checkbox_plugin when sender not exists', () => {
-      const type = 'authentication';
+    it('uses the sender ID if the authentication event contains one', () => {
+      const spy = sinon.spy(bot, 'sendMessage');
       const event = {
-        recipient: {
-          id: pageId
+        "sender": {
+          "id": "USER_ID"
         },
-        timestamp: 1234567890,
-        optin: {
-          ref: "PASS_THROUGH_PARAM",
-          user_ref: userId
-        }
-      }
-
-      bot._handleEvent(type, event);
-      expect(bot.optinOrigin).to.equal('checkbox_plugin');
-    });
-
-    it('optin origin should be null when tpye is not authentication', () => {
-      const type = 'read';
-      const event = {
-        sender: {
-          id: userId
+        "recipient": {
+          "id": "PAGE_ID"
         },
-        recipient: {
-          id: pageId
-        },
-        timestamp: 1234567890,
-        optin: {
-          ref: 'PASS_THROUGH_PARAM'
+        "timestamp": 1234567890,
+        "optin": {
+          "ref":"PASS_THROUGH_PARAM"
         }
       };
+      const expectedRecipient = 'USER_ID';
+      const expectedMessage = { text: 'hello' };
 
-      bot._handleEvent(type, event);
-      expect(bot.optinOrigin).to.be.null;
-    });
-
-    it('should call emit once', () => {
-      const spy = sinon.spy(bot, 'emit');
-      const type = 'read';
-      const event = {
-        sender: {
-          id: userId
-        },
-        recipient: {
-          id: pageId
-        },
-        timestamp: 1234567890,
-        optin: {
-          ref: 'PASS_THROUGH_PARAM'
-        }
-      };
-
-      bot._handleEvent(type, event);
-      expect(spy.calledOnce).to.equal(true);
+      bot.on('authentication', (payload, chat) => {
+        chat.say('hello');
+      });
+      bot._handleEvent('authentication', event);
+      expect(spy.calledWith(expectedRecipient, expectedMessage)).to.equal(true);
     });
   });
 });
