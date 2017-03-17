@@ -177,19 +177,19 @@ describe('BootBot', () => {
     const spy = sinon.spy(bot, 'sendRequest');
     const elements = [
       {
-        "title":"Welcome to Peter\'s Hats",
-        "image_url":"http://petersapparel.parseapp.com/img/item100-thumb.png",
-        "subtitle":"We\'ve got the right hat for everyone.",
-        "buttons":[
+        "title": "Welcome to Peter\'s Hats",
+        "image_url": "http://petersapparel.parseapp.com/img/item100-thumb.png",
+        "subtitle": "We\'ve got the right hat for everyone.",
+        "buttons": [
           {
-            "type":"web_url",
-            "url":"https://petersapparel.parseapp.com/view_item?item_id=100",
-            "title":"View Website"
+            "type": "web_url",
+            "url": "https://petersapparel.parseapp.com/view_item?item_id=100",
+            "title": "View Website"
           },
           {
-            "type":"postback",
-            "title":"Start Chatting",
-            "payload":"USER_DEFINED_PAYLOAD"
+            "type": "postback",
+            "title": "Start Chatting",
+            "payload": "USER_DEFINED_PAYLOAD"
           }
         ]
       }
@@ -233,5 +233,53 @@ describe('BootBot', () => {
 
     bot.sendAttachment(userId, type, url);
     expect(spy.calledWith(expected)).to.equal(true);
+  });
+
+  describe('Checkbox Plugin support', () => {
+    it('uses the user_ref param as the recipient when replying to a checkbox authentication event', () => {
+      const spy = sinon.spy(bot, 'sendMessage');
+      const event = {
+        "recipient": {
+          "id": "PAGE_ID"
+        },
+        "timestamp": 1234567890,
+        "optin": {
+          "ref": "PASS_THROUGH_PARAM",
+          "user_ref": "UNIQUE_REF_PARAM"
+        }
+      };
+      const expectedRecipient = { user_ref: 'UNIQUE_REF_PARAM' };
+      const expectedMessage = { text: 'hello' };
+
+      bot.on('authentication', (payload, chat) => {
+        chat.say('hello');
+      });
+      bot._handleEvent('authentication', event);
+      expect(spy.calledWith(expectedRecipient, expectedMessage)).to.equal(true);
+    });
+
+    it('uses the sender ID if the authentication event contains one', () => {
+      const spy = sinon.spy(bot, 'sendMessage');
+      const event = {
+        "sender": {
+          "id": "USER_ID"
+        },
+        "recipient": {
+          "id": "PAGE_ID"
+        },
+        "timestamp": 1234567890,
+        "optin": {
+          "ref":"PASS_THROUGH_PARAM"
+        }
+      };
+      const expectedRecipient = 'USER_ID';
+      const expectedMessage = { text: 'hello' };
+
+      bot.on('authentication', (payload, chat) => {
+        chat.say('hello');
+      });
+      bot._handleEvent('authentication', event);
+      expect(spy.calledWith(expectedRecipient, expectedMessage)).to.equal(true);
+    });
   });
 });

@@ -40,3 +40,4 @@ jspm_packages
 
 examples/config/development.json
 examples/config/production.json
+.vscode/settings.json
