@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - This Changelog.
 - Link to Slack channel.
+- Added .travis.yml to run our tests on https://travis-ci.org/Charca/bootbot
 - Support for checkbox pluggin by [@rmattos](https://github.com/rmattos).
 
 ## [1.0.8] - 2017-02-23
