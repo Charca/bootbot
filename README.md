@@ -406,6 +406,22 @@ The `elements` param must be an array of [element objects](https://developers.fa
 
 The `options` param is identical to the `options` param of the [`.say()`](#say) method.
 
+#### `.sendListTemplate()`
+
+| Method signature |
+|:-----------------|
+| `chat.sendListTemplate(top_element_style, elements, buttons, [ options ])` |
+| `convo.sendListTemplate(top_element_style, elements, buttons, [ options ])` |
+| `bot.sendListTemplate(userId, top_element_style, elements, buttons, [ options ])` |
+
+The `top_element_style` param must be a string `large` or `compact`.
+
+The `elements` param must be an array of [element objects](https://developers.facebook.com/docs/messenger-platform/send-api-reference/list-template).
+
+The `buttons` param can be an array with one element: strings or [button objects](https://developers.facebook.com/docs/messenger-platform/send-api-reference/list-template).
+
+The `options` param is identical to the `options` param of the [`.say()`](#say) method.
+
 #### `.sendTemplate()`
 
 | Method signature |

@@ -213,6 +213,54 @@ describe('BootBot', () => {
     expect(spy.calledWith(expected)).to.equal(true);
   });
 
+  it('can send a list template', () => {
+    const spy = sinon.spy(bot, 'sendRequest');
+    const elements = [{
+      "title": "Classic T-Shirt Collection",
+      "image_url": "https://peterssendreceiveapp.ngrok.io/img/collection.png",
+      "subtitle": "See all our colors",
+      "default_action": {
+        "type": "web_url",
+        "url": "https://peterssendreceiveapp.ngrok.io/shop_collection",
+        "messenger_extensions": true,
+        "webview_height_ratio": "tall",
+        "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+      },
+      "buttons": [{
+        "title": "View",
+        "type": "web_url",
+        "url": "https://peterssendreceiveapp.ngrok.io/collection",
+        "messenger_extensions": true,
+        "webview_height_ratio": "tall",
+        "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+      }]
+    }];
+    const buttons = [{
+      "title": "View More",
+      "type": "postback",
+      "payload": "payload"
+    }]
+    const expected = {
+      recipient: {
+        id: userId
+      },
+      message: {
+        attachment: {
+          type: 'template',
+          payload: {
+            template_type: 'list',
+            top_element_style: 'compact',
+            elements,
+            buttons
+          }
+        }
+      }
+    };
+
+    bot.sendListTemplate(userId, 'compact', elements, buttons);
+    expect(spy.calledWith(expected)).to.equal(true);
+  });
+
   it('can send an attachment', () => {
     const spy = sinon.spy(bot, 'sendRequest');
     const type = 'image';
