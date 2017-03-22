@@ -203,6 +203,7 @@ describe('BootBot', () => {
           type: 'template',
           payload: {
             template_type: 'generic',
+            image_aspect_ratio: 'horizontal',
             elements
           }
         }
@@ -240,6 +241,9 @@ describe('BootBot', () => {
       "type": "postback",
       "payload": "payload"
     }]
+    const options = {
+      top_element_style: 'compact'
+    };
     const expected = {
       recipient: {
         id: userId
@@ -257,7 +261,7 @@ describe('BootBot', () => {
       }
     };
 
-    bot.sendListTemplate(userId, 'compact', elements, buttons);
+    bot.sendListTemplate(userId, elements, buttons, options);
     expect(spy.calledWith(expected)).to.equal(true);
   });
 

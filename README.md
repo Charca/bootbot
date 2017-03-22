@@ -404,7 +404,7 @@ The `options` param is identical to the `options` param of the [`.say()`](#say) 
 
 The `elements` param must be an array of [element objects](https://developers.facebook.com/docs/messenger-platform/send-api-reference/generic-template).
 
-The `options` param is identical to the `options` param of the [`.say()`](#say) method.
+The `options` param extends `options` param of the [`.say()`](#say) method with `image_aspect_ratio` property (Must be `horizontal` or `square`. Defaults to `horizontal`.)
 
 #### `.sendListTemplate()`
 
@@ -420,7 +420,7 @@ The `elements` param must be an array of [element objects](https://developers.fa
 
 The `buttons` param can be an array with one element: string or [button object](https://developers.facebook.com/docs/messenger-platform/send-api-reference/list-template).
 
-The `options` param is identical to the `options` param of the [`.say()`](#say) method.
+The `options` param extends `options` param of the [`.say()`](#say) method with `top_element_style` property (Must be `large` or `compact`. Defaults to `large`.)
 
 #### `.sendTemplate()`
 
