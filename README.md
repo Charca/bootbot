@@ -404,7 +404,7 @@ The `options` param is identical to the `options` param of the [`.say()`](#say) 
 
 The `elements` param must be an array of [element objects](https://developers.facebook.com/docs/messenger-platform/send-api-reference/generic-template).
 
-The `options` param extends `options` param of the [`.say()`](#say) method with `image_aspect_ratio` property (Must be `horizontal` or `square`. Defaults to `horizontal`).
+The `options` param extends `options` param of the [`.say()`](#say) method with `imageAspectRatio` property.
 
 #### `.sendListTemplate()`
 
@@ -414,13 +414,11 @@ The `options` param extends `options` param of the [`.say()`](#say) method with 
 | `convo.sendListTemplate(elements, buttons, [ options ])` |
 | `bot.sendListTemplate(userId, elements, buttons, [ options ])` |
 
-The `top_element_style` param must be a string `large` or `compact`.
-
 The `elements` param must be an array of [element objects](https://developers.facebook.com/docs/messenger-platform/send-api-reference/list-template).
 
 The `buttons` param can be an array with one element: string or [button object](https://developers.facebook.com/docs/messenger-platform/send-api-reference/list-template).
 
-The `options` param extends `options` param of the [`.say()`](#say) method with `top_element_style` property (Must be `large` or `compact`. Defaults to `large`).
+The `options` param extends `options` param of the [`.say()`](#say) method with `topElementStyle` property.
 
 #### `.sendTemplate()`
 

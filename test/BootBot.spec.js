@@ -194,6 +194,9 @@ describe('BootBot', () => {
         ]
       }
     ];
+      const options = {
+      imageAspectRatio: 'horizontal'
+    };
     const expected = {
       recipient: {
         id: userId
@@ -210,7 +213,7 @@ describe('BootBot', () => {
       }
     };
 
-    bot.sendGenericTemplate(userId, elements);
+    bot.sendGenericTemplate(userId, elements, options);
     expect(spy.calledWith(expected)).to.equal(true);
   });
 
@@ -242,7 +245,7 @@ describe('BootBot', () => {
       "payload": "payload"
     }]
     const options = {
-      top_element_style: 'compact'
+      topElementStyle: 'compact'
     };
     const expected = {
       recipient: {
