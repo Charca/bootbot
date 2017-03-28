@@ -194,6 +194,9 @@ describe('BootBot', () => {
         ]
       }
     ];
+      const options = {
+      imageAspectRatio: 'horizontal'
+    };
     const expected = {
       recipient: {
         id: userId
@@ -203,13 +206,65 @@ describe('BootBot', () => {
           type: 'template',
           payload: {
             template_type: 'generic',
+            image_aspect_ratio: 'horizontal',
             elements
           }
         }
       }
     };
 
-    bot.sendGenericTemplate(userId, elements);
+    bot.sendGenericTemplate(userId, elements, options);
+    expect(spy.calledWith(expected)).to.equal(true);
+  });
+
+  it('can send a list template', () => {
+    const spy = sinon.spy(bot, 'sendRequest');
+    const elements = [{
+      "title": "Classic T-Shirt Collection",
+      "image_url": "https://peterssendreceiveapp.ngrok.io/img/collection.png",
+      "subtitle": "See all our colors",
+      "default_action": {
+        "type": "web_url",
+        "url": "https://peterssendreceiveapp.ngrok.io/shop_collection",
+        "messenger_extensions": true,
+        "webview_height_ratio": "tall",
+        "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+      },
+      "buttons": [{
+        "title": "View",
+        "type": "web_url",
+        "url": "https://peterssendreceiveapp.ngrok.io/collection",
+        "messenger_extensions": true,
+        "webview_height_ratio": "tall",
+        "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+      }]
+    }];
+    const buttons = [{
+      "title": "View More",
+      "type": "postback",
+      "payload": "payload"
+    }]
+    const options = {
+      topElementStyle: 'compact'
+    };
+    const expected = {
+      recipient: {
+        id: userId
+      },
+      message: {
+        attachment: {
+          type: 'template',
+          payload: {
+            template_type: 'list',
+            top_element_style: 'compact',
+            elements,
+            buttons
+          }
+        }
+      }
+    };
+
+    bot.sendListTemplate(userId, elements, buttons, options);
     expect(spy.calledWith(expected)).to.equal(true);
   });
 
