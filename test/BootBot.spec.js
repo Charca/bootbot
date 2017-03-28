@@ -194,7 +194,7 @@ describe('BootBot', () => {
         ]
       }
     ];
-      const options = {
+    const options = {
       imageAspectRatio: 'horizontal'
     };
     const expected = {
