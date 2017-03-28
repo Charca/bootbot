@@ -290,6 +290,27 @@ describe('BootBot', () => {
     expect(spy.calledWith(expected)).to.equal(true);
   });
 
+  it('emits a referral event', () => {
+    const callback = sinon.spy();
+    const event = {
+      "sender": {
+        "id": "USER_ID"
+      },
+      "recipient": {
+        "id": "PAGE_ID"
+      },
+      "timestamp": 1458692752478,
+      "referral": {
+        "ref": "MY_REF",
+        "source": "SHORTLINK",
+        "type": "OPEN_THREAD"
+      }
+    };
+    bot.on('referral', callback);
+    bot._handleEvent('referral', event);
+    expect(callback.calledWith(event)).to.equal(true);
+  });
+
   describe('Checkbox Plugin support', () => {
     it('uses the user_ref param as the recipient when replying to a checkbox authentication event', () => {
       const spy = sinon.spy(bot, 'sendMessage');
