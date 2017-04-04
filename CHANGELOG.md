@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Support for [referral event](https://developers.facebook.com/docs/messenger-platform/referral-params).
 
+### Fixed
+- Added `sendListTemplate()` method to Chat instance (it was only available on Bot instance).
+
 ## [1.0.10] - 2017-03-27
 ### Added
 - Added `sendListTemplate` method.
