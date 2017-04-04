@@ -581,7 +581,7 @@ const options = {
 	typing: true // Send a typing indicator before asking the question
 };
 
-convo.ask(question, answer, callback, options);
+convo.ask(question, answer, callbacks, options);
 ```
 
 #### `convo.set(property, value)`
