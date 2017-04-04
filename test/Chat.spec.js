@@ -73,6 +73,15 @@ describe('Chat', () => {
     expect(spy.calledWith(chat.userId, cards, options)).to.equal(true);
   });
 
+  it('maps sendListTemplate() method to BootBot instance', () => {
+    const cards = [ 'Card1', 'Card2' ];
+    const buttons = [ 'Button 1', 'Button 2' ];
+    const options = { typing: true };
+    const spy = sinon.spy(bot, 'sendListTemplate');
+    chat.sendListTemplate(cards, buttons, options);
+    expect(spy.calledWith(chat.userId, cards, buttons, options)).to.equal(true);
+  });
+
   it('maps sendTemplate() method to BootBot instance', () => {
     const payload = { type: 'template' };
     const options = { typing: true };
