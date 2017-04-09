@@ -177,23 +177,26 @@ describe('BootBot', () => {
     const spy = sinon.spy(bot, 'sendRequest');
     const elements = [
       {
-        "title":"Welcome to Peter\'s Hats",
-        "image_url":"http://petersapparel.parseapp.com/img/item100-thumb.png",
-        "subtitle":"We\'ve got the right hat for everyone.",
-        "buttons":[
+        "title": "Welcome to Peter\'s Hats",
+        "image_url": "http://petersapparel.parseapp.com/img/item100-thumb.png",
+        "subtitle": "We\'ve got the right hat for everyone.",
+        "buttons": [
           {
-            "type":"web_url",
-            "url":"https://petersapparel.parseapp.com/view_item?item_id=100",
-            "title":"View Website"
+            "type": "web_url",
+            "url": "https://petersapparel.parseapp.com/view_item?item_id=100",
+            "title": "View Website"
           },
           {
-            "type":"postback",
-            "title":"Start Chatting",
-            "payload":"USER_DEFINED_PAYLOAD"
+            "type": "postback",
+            "title": "Start Chatting",
+            "payload": "USER_DEFINED_PAYLOAD"
           }
         ]
       }
     ];
+    const options = {
+      imageAspectRatio: 'horizontal'
+    };
     const expected = {
       recipient: {
         id: userId
@@ -203,13 +206,65 @@ describe('BootBot', () => {
           type: 'template',
           payload: {
             template_type: 'generic',
+            image_aspect_ratio: 'horizontal',
             elements
           }
         }
       }
     };
 
-    bot.sendGenericTemplate(userId, elements);
+    bot.sendGenericTemplate(userId, elements, options);
+    expect(spy.calledWith(expected)).to.equal(true);
+  });
+
+  it('can send a list template', () => {
+    const spy = sinon.spy(bot, 'sendRequest');
+    const elements = [{
+      "title": "Classic T-Shirt Collection",
+      "image_url": "https://peterssendreceiveapp.ngrok.io/img/collection.png",
+      "subtitle": "See all our colors",
+      "default_action": {
+        "type": "web_url",
+        "url": "https://peterssendreceiveapp.ngrok.io/shop_collection",
+        "messenger_extensions": true,
+        "webview_height_ratio": "tall",
+        "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+      },
+      "buttons": [{
+        "title": "View",
+        "type": "web_url",
+        "url": "https://peterssendreceiveapp.ngrok.io/collection",
+        "messenger_extensions": true,
+        "webview_height_ratio": "tall",
+        "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+      }]
+    }];
+    const buttons = [{
+      "title": "View More",
+      "type": "postback",
+      "payload": "payload"
+    }]
+    const options = {
+      topElementStyle: 'compact'
+    };
+    const expected = {
+      recipient: {
+        id: userId
+      },
+      message: {
+        attachment: {
+          type: 'template',
+          payload: {
+            template_type: 'list',
+            top_element_style: 'compact',
+            elements,
+            buttons
+          }
+        }
+      }
+    };
+
+    bot.sendListTemplate(userId, elements, buttons, options);
     expect(spy.calledWith(expected)).to.equal(true);
   });
 
@@ -233,5 +288,74 @@ describe('BootBot', () => {
 
     bot.sendAttachment(userId, type, url);
     expect(spy.calledWith(expected)).to.equal(true);
+  });
+
+  it('emits a referral event', () => {
+    const callback = sinon.spy();
+    const event = {
+      "sender": {
+        "id": "USER_ID"
+      },
+      "recipient": {
+        "id": "PAGE_ID"
+      },
+      "timestamp": 1458692752478,
+      "referral": {
+        "ref": "MY_REF",
+        "source": "SHORTLINK",
+        "type": "OPEN_THREAD"
+      }
+    };
+    bot.on('referral', callback);
+    bot._handleEvent('referral', event);
+    expect(callback.calledWith(event)).to.equal(true);
+  });
+
+  describe('Checkbox Plugin support', () => {
+    it('uses the user_ref param as the recipient when replying to a checkbox authentication event', () => {
+      const spy = sinon.spy(bot, 'sendMessage');
+      const event = {
+        "recipient": {
+          "id": "PAGE_ID"
+        },
+        "timestamp": 1234567890,
+        "optin": {
+          "ref": "PASS_THROUGH_PARAM",
+          "user_ref": "UNIQUE_REF_PARAM"
+        }
+      };
+      const expectedRecipient = { user_ref: 'UNIQUE_REF_PARAM' };
+      const expectedMessage = { text: 'hello' };
+
+      bot.on('authentication', (payload, chat) => {
+        chat.say('hello');
+      });
+      bot._handleEvent('authentication', event);
+      expect(spy.calledWith(expectedRecipient, expectedMessage)).to.equal(true);
+    });
+
+    it('uses the sender ID if the authentication event contains one', () => {
+      const spy = sinon.spy(bot, 'sendMessage');
+      const event = {
+        "sender": {
+          "id": "USER_ID"
+        },
+        "recipient": {
+          "id": "PAGE_ID"
+        },
+        "timestamp": 1234567890,
+        "optin": {
+          "ref":"PASS_THROUGH_PARAM"
+        }
+      };
+      const expectedRecipient = 'USER_ID';
+      const expectedMessage = { text: 'hello' };
+
+      bot.on('authentication', (payload, chat) => {
+        chat.say('hello');
+      });
+      bot._handleEvent('authentication', event);
+      expect(spy.calledWith(expectedRecipient, expectedMessage)).to.equal(true);
+    });
   });
 });
