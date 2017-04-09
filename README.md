@@ -649,17 +649,19 @@ Take a look at the `examples/module-example.js` file for a complete example.
 
 #### `.setGreetingText(text)`
 
-[Facebook Docs](https://developers.facebook.com/docs/messenger-platform/thread-settings/greeting-text)
+[Facebook Docs](https://developers.facebook.com/docs/messenger-platform/messenger-profile/greeting-text)
 
 | Param | Type | Default | Required |
 |:------|:-----|:--------|:---------|
-| `text` | string | | `Y` |
+| `text` | string or array | | `Y` |
 
 Set a greeting text for new conversations. The Greeting Text is only rendered the first time the user interacts with a the Page on Messenger.
 
+**Localization support:** `text` can be a string containing the greeting text, or an array of objects to support multiple locales. For more info on the format of these objects, see [the documentation](https://developers.facebook.com/docs/messenger-platform/messenger-profile/greeting-text).
+
 #### `.setGetStartedButton(action)`
 
-[Facebook Docs](https://developers.facebook.com/docs/messenger-platform/thread-settings/get-started-button)
+[Facebook Docs](https://developers.facebook.com/docs/messenger-platform/messenger-profile/get-started-button)
 
 | Param | Type | Default | Required |
 |:------|:-----|:--------|:---------|
@@ -671,15 +673,20 @@ React to a user starting a conversation with the bot by clicking the Get Started
 
 Removes the Get Started button call to action.
 
-#### `.setPersistentMenu(buttons)`
+#### `.setPersistentMenu(buttons, [ disableInput ])`
 
-[Facebook Docs](https://developers.facebook.com/docs/messenger-platform/thread-settings/persistent-menu)
+[Facebook Docs](https://developers.facebook.com/docs/messenger-platform/messenger-profile/persistent-menu)
 
 | Param | Type | Default | Required |
 |:------|:-----|:--------|:---------|
 | `buttons` | array of strings or objects | | `Y` |
+| `disableInput ` | boolean | `false` | `N` |
 
-Creates a Persistent Menu that is available at any time during the conversation. The `buttons` param can be an array of strings or button objects.
+Creates a Persistent Menu that is available at any time during the conversation. The `buttons` param can be an array of strings, button objects, or locale objects.
+
+If `disableInput` is set to `true`, it will disable user input in the menu. The user will only be able to interact with the bot via the menu, postbacks, buttons and webviews.
+
+**Localization support:** if `buttons` is an array of objects containing a `locale` attribute, it will be used as-is, expecting it to be an array of localized menues. For more info on the format of these objects, see [the documentation](https://developers.facebook.com/docs/messenger-platform/messenger-profile/persistent-menu).
 
 #### `.deletePersistentMenu()`
 
