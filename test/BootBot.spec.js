@@ -311,6 +311,110 @@ describe('BootBot', () => {
     expect(callback.calledWith(event)).to.equal(true);
   });
 
+  describe('Messenger Profile API', () => {
+    it('can set a greeting text', () => {
+      const spy = sinon.spy(bot, 'sendProfileRequest');
+      const text = 'Hello, world!';
+      const expected = {
+        greeting: [{
+          locale: 'default',
+          text
+        }]
+      };
+
+      bot.setGreetingText(text);
+      expect(spy.calledWith(expected)).to.equal(true);
+    });
+
+    it('can set the Get Started button', () => {
+      const spy = sinon.spy(bot, 'sendProfileRequest');
+      const callback = () => {};
+      const expected = {
+        get_started: {
+          payload: 'BOOTBOT_GET_STARTED'
+        }
+      };
+
+      // With a callback
+      bot.setGetStartedButton(callback);
+      expect(spy.calledWith(expected)).to.equal(true);
+
+      const payload = 'CUSTOM_GET_STARTED_PAYLOAD';
+      const expected2 = {
+        get_started: {
+          payload
+        }
+      };
+
+      // With a payload
+      bot.setGetStartedButton(payload);
+      expect(spy.calledWith(expected)).to.equal(true);
+    });
+
+    it('can delete the Get Started button', () => {
+      const spy = sinon.spy(bot, 'sendProfileRequest');
+      const expected = {
+        fields: [ 'get_started' ]
+      };
+
+      bot.deleteGetStartedButton();
+      expect(spy.calledWith(expected, 'DELETE')).to.equal(true);
+    });
+
+    it('can set the Persistent Menu', () => {
+      const spy = sinon.spy(bot, 'sendProfileRequest');
+      const buttons = [
+        {
+          title: 'My Account',
+          type: 'nested',
+          call_to_actions: [
+            {
+              title: 'Pay Bill',
+              type: 'postback',
+              payload: 'PAYBILL_PAYLOAD'
+            },
+            {
+              title: 'History',
+              type: 'postback',
+              payload: 'HISTORY_PAYLOAD'
+            },
+            {
+              title: 'Contact Info',
+              type: 'postback',
+              payload: 'CONTACT_INFO_PAYLOAD'
+            }
+          ]
+        },
+        {
+          title: 'Go to Website',
+          type: 'web_url',
+          url: 'http://purple.com'
+        }
+      ];
+      const disableInput = false;
+      const expected = {
+        persistent_menu: [{
+          locale: 'default',
+          composer_input_disabled: disableInput,
+          call_to_actions: buttons
+        }]
+      };
+
+      bot.setPersistentMenu(buttons, disableInput);
+      expect(spy.calledWith(expected)).to.equal(true);
+    });
+
+    it('can delete the Persistent Menu', () => {
+      const spy = sinon.spy(bot, 'sendProfileRequest');
+      const expected = {
+        fields: [ 'persistent_menu' ]
+      };
+
+      bot.deletePersistentMenu();
+      expect(spy.calledWith(expected, 'DELETE')).to.equal(true);
+    });
+  });
+
   describe('Checkbox Plugin support', () => {
     it('uses the user_ref param as the recipient when replying to a checkbox authentication event', () => {
       const spy = sinon.spy(bot, 'sendMessage');
