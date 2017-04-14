@@ -5,11 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Support for [Messenger Profile API](https://developers.facebook.com/docs/messenger-platform/messenger-profile).
 
 ## [1.0.11] - 2017-04-13
 ### Added
 - Support for [referral event](https://developers.facebook.com/docs/messenger-platform/referral-params).
-- Support for [Messenger Profile API](https://developers.facebook.com/docs/messenger-platform/messenger-profile).
 
 ### Fixed
 - Added `sendListTemplate()` method to Chat instance (it was only available on Bot instance).
