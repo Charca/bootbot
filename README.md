@@ -17,7 +17,7 @@ BootBot is a simple but powerful JavaScript Framework to build Facebook Messenge
 - Start **conversations**, **ask** questions and save important information in the **context** of the conversation.
 - Organize your code in **modules**.
 - Send automatic or manual **typing indicators**.
-- Set threads such as a **persistent menu**, a **greeting text** or a **get started CTA**.
+- Set your bot's properties, such as a **persistent menu**, a **greeting text** or a **get started CTA**.
 - Subscribe to **received** and **read** events.
 
 ## Usage
@@ -125,7 +125,7 @@ bot.hear('ask me something', (payload, chat) => {
 	chat.conversation((convo) => {
 		askName(convo);
 	});
-	
+
 	const askName = (convo) => {
 		convo.ask(`What's your name?`, (payload, convo) => {
 			const text = payload.message.text;
@@ -133,7 +133,7 @@ bot.hear('ask me something', (payload, chat) => {
 			convo.say(`Oh, your name is ${text}`).then(() => askFavoriteFood(convo));
 		});
 	};
-	
+
 	const askFavoriteFood = (convo) => {
 		convo.ask(`What's your favorite food?`, (payload, convo) => {
 			const text = payload.message.text;
@@ -141,7 +141,7 @@ bot.hear('ask me something', (payload, chat) => {
 			convo.say(`Got it, your favorite food is ${text}`).then(() => sendSummary(convo));
 		});
 	};
-	
+
 	const sendSummary = (convo) => {
 		convo.say(`Ok, here's what you told me about you:
 	      - Name: ${convo.get('name')}
@@ -645,7 +645,7 @@ Take a look at the `examples/module-example.js` file for a complete example.
 
 ---
 
-### Threads
+### Messenger Profile API
 
 #### `.setGreetingText(text)`
 
@@ -700,7 +700,7 @@ Check the `examples` directory to see more demos of:
 - A bot that searches for random gifs
 - An example conversation with questions and answers
 - How to organize your code using modules
-- How to use threads to set a Persistent Menu or a Get Started CTA
+- How to use the Messenger Profile API to set a Persistent Menu or a Get Started CTA
 - How to get the user's profile information
 
 To run the examples, make sure to complete the `examples/config/default.json` file with your bot's tokens, and then cd into the `examples` folder and run the desired example with node. For example:
