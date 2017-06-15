@@ -52,7 +52,7 @@ describe('BootBot', () => {
     const comment = sinon.spy();
     bot.hear(/hello/, (payload, chat) => {
       comment();
-    })
+    });
     const data = {
       "object": "page",
       "entry": [
@@ -76,8 +76,8 @@ describe('BootBot', () => {
           ]
         }
       ]
-    }
-    bot.handleFacebookData(data)
+    };
+    bot.handleFacebookData(data);
     expect(comment.calledOnce).to.equal(true);
   });
 
@@ -85,7 +85,7 @@ describe('BootBot', () => {
     const comment = sinon.spy();
     bot.hear(/hello/, (payload, chat) => {
       comment();
-    })
+    });
     const data = {
       "object": "page",
       "entry": [
@@ -109,8 +109,8 @@ describe('BootBot', () => {
           ]
         }
       ]
-    }
-    bot.handleFacebookData(data)
+    };
+    bot.handleFacebookData(data);
     expect(comment.called).to.equal(false);
   });
 
