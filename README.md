@@ -54,6 +54,8 @@ Creating a Giphy Chat Bot in 3 minutes:
 
 - Install BootBot via NPM, create a new `index.js`, require BootBot and create a new bot instance using your Facebook Page's / App's `accessToken`, `verifyToken` and `appSecret`:
 
+**Note:** If you don't know how to get these tokens, take a look at Facebook's [Quick Start Guide](https://developers.facebook.com/docs/messenger-platform/guides/quick-start) or check out [this issue](https://github.com/Charca/bootbot/issues/56).
+
 ```javascript
 // index.js
 'use strict';
