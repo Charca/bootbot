@@ -151,21 +151,6 @@ bot.hear('ask me something', (payload, chat) => {
 });
 ```
 
-- If you want to specify a custom webhook path you can add it during bot initialization:
-
-```javascript
-// when you initialize your bot
-'use strict';
-const BootBot = require('bootbot');
-
-const bot = new BootBot({
-  accessToken: 'FB_ACCESS_TOKEN',
-  verifyToken: 'FB_VERIFY_TOKEN',
-  appSecret: 'FB_APP_SECRET',
-  webhook: "/chatbots/facebook", // otherwise it will default to /webhook
-});
-```
-
 - Set up webhooks and start the express server:
 
 ```javascript
@@ -199,9 +184,12 @@ Then use the provided HTTPS URL to config your webhook on Facebook's Dashboard. 
 | `accessToken` | string | | `Y` |
 | `verifyToken` | string | | `Y` |
 | `appSecret` | string | | `Y` |
+| `webhook` | string | `"/webhook"` | `N` |
 | `broadcastEchoes` | boolean | `false` | `N` |
 
 Creates a new `BootBot` instance. Instantiates the new express app and all required webhooks. `options` param must contain all tokens and app secret of your Facebook app. Optionally, set `broadcastEchoes` to `true` if you want the messages your bot send to be echoed back to it (you probably don't need this feature unless you have multiple bots running on the same Facebook page).
+
+If you want to specify a custom endpoint name for your webhook, you can do it with the `webhook` option.
 
 #### `.start([ port ])`
 
