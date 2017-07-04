@@ -151,9 +151,24 @@ bot.hear('ask me something', (payload, chat) => {
 });
 ```
 
+- If you want to specify a custom webhook path you can add it during bot initialization:
+
+```javascript
+// when you initialize your bot
+'use strict';
+const BootBot = require('bootbot');
+
+const bot = new BootBot({
+  accessToken: 'FB_ACCESS_TOKEN',
+  verifyToken: 'FB_VERIFY_TOKEN',
+  appSecret: 'FB_APP_SECRET',
+  webhook: "/chatbots/facebook", // otherwise it will default to /webhook
+});
+```
+
 - Set up webhooks and start the express server:
 
-```
+```javascript
 bot.start();
 ```
 
