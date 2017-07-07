@@ -8,7 +8,7 @@ BootBot is a simple but powerful JavaScript Framework to build Facebook Messenge
 |---|---|---|---|---|---|---|---|
 
 
-**[ :speech_balloon: Questions / Comments? Join our Slack channel!](https://bootbot.slack.com/shared_invite/MTQwODA0MDU2NDUxLTE0ODcwMTQ1MjgtNTc3MDVhOWRjZQ)**
+**[ :speech_balloon: Questions / Comments? Join our Slack channel!](https://bootbot-slack-channel.herokuapp.com/)**
 
 ## Features
 
