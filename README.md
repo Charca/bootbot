@@ -229,6 +229,7 @@ Subscribe to an event emitted by the bot, and execute a callback when those even
 | `delivery` | The bot received a confirmation that your message was delivered to the user |
 | `read` | The bot received a confirmation that your message was read by the user |
 | `authentication` | A user has started a conversation with the bot using a "Send to Messenger" button |
+| `referral` | A user that already has a thread with the bot starts a conversation. [more](https://developers.facebook.com/docs/messenger-platform/reference/webhook-events/messaging_referrals) |
 
 You can also subscribe to specific postbacks and quick replies by using a namespace. For example `postback:ADD_TO_CART` subscribes only to the postback event containing the `ADD_TO_CART` payload.
 
