@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.14] - 2017-11-25
+### Added
+- Added `handleFacebookData` method that lets you use BootBot's API without running the built-in Express server.
+- Added support for List Templates and Generic Templates via the `.say()` method.
+- Added support for subsequent ordered calls to `.say()` by passing in an array of messages.
+
+### Fixed
+- Fixed validation of button templates on `_formatButton` method.
+
 ## [1.0.13] - 2017-11-10
 ### Added
 - Support for custom webhook endpoint name.
@@ -41,7 +50,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Added generic error message for when Messenger's API responds with an 'error' node.
 
-[Unreleased]: https://github.com/Charca/bootbot/compare/v1.0.13...HEAD
+[Unreleased]: https://github.com/Charca/bootbot/compare/v1.0.14...HEAD
+[1.0.14]: https://github.com/Charca/bootbot/compare/v1.0.13...v1.0.14
 [1.0.13]: https://github.com/Charca/bootbot/compare/v1.0.12...v1.0.13
 [1.0.12]: https://github.com/Charca/bootbot/compare/v1.0.11...v1.0.12
 [1.0.11]: https://github.com/Charca/bootbot/compare/v1.0.10...v1.0.11
