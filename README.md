@@ -358,6 +358,25 @@ chat.say({
 	]
 });
 
+// Send a list template
+chat.say({
+	elements: [
+		{ title: 'Artile 1', image_url: '/path/to/image1.png', default_action: {} },
+		{ title: 'Artile 2', image_url: '/path/to/image2.png', default_action: {} }
+	],
+	buttons: [
+		{ type: 'postback', title: 'View More', payload: 'VIEW_MORE' }
+	]
+});
+
+// Send a generic template
+chat.say({
+	cards: [
+		{ title: 'Card 1', image_url: '/path/to/image1.png', default_action: {} },
+		{ title: 'Card 2', image_url: '/path/to/image2.png', default_action: {} }
+	]
+});
+
 // Send an attachment
 chat.say({
 	attachment: 'video',

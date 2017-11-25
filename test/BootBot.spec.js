@@ -440,6 +440,37 @@ describe('BootBot', () => {
       expect(spy.calledWith(recipentId, message.attachment, message.url, message.quickReplies, options)).to.equal(true)
     });
 
+    it('should call sendListTemplate when calling .say() with an object', () => {
+      const spy = sinon.spy(bot, 'sendListTemplate');
+      const recipentId = 1234;
+      const message = {
+        elements: ['1', '2', '3'],
+        buttons: ['a', 'b', 'c']
+      };
+      const options = {};
+
+      expect(spy.called).to.equal(false)
+
+      bot.say(recipentId, message, options)
+
+      expect(spy.calledWith(recipentId, message.elements, message.buttons, options)).to.equal(true)
+    });
+
+    it('should call sendGenericTemplate when calling .say() with an object', () => {
+      const spy = sinon.spy(bot, 'sendGenericTemplate');
+      const recipentId = 1234;
+      const message = {
+        cards: ['1', '2', '3']
+      };
+      const options = {};
+
+      expect(spy.called).to.equal(false)
+
+      bot.say(recipentId, message, options)
+
+      expect(spy.calledWith(recipentId, message.cards, options)).to.equal(true)
+    });
+
     it('should make subsequent calls to .say() when calling it with an array', (done) => {
       bot.sendMessage = () => Promise.resolve()
       const spy = sinon.spy(bot, 'say');
