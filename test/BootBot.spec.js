@@ -48,6 +48,72 @@ describe('BootBot', () => {
     expect(spy.calledWith(expected)).to.equal(true);
   });
 
+  it('responds to a hear', () => {
+    const comment = sinon.spy();
+    bot.hear(/hello/, (payload, chat) => {
+      comment();
+    });
+    const data = {
+      "object": "page",
+      "entry": [
+        {
+          "id": "PAGE_ID",
+          "time": 1458692752478,
+          "messaging": [
+            {
+              "sender": {
+                "id": "USER_ID"
+              },
+              "recipient": {
+                "id": "PAGE_ID"
+              },
+              "timestamp": 1458692752478,
+              "message": {
+                "mid": "mid.1457764197618:41d102a3e1ae206a38",
+                "text": "hello, world!"
+              }
+            }
+          ]
+        }
+      ]
+    };
+    bot.handleFacebookData(data);
+    expect(comment.calledOnce).to.equal(true);
+  });
+
+  it('hear doesn\'t respond on non-match', () => {
+    const comment = sinon.spy();
+    bot.hear(/hello/, (payload, chat) => {
+      comment();
+    });
+    const data = {
+      "object": "page",
+      "entry": [
+        {
+          "id": "PAGE_ID",
+          "time": 1458692752478,
+          "messaging": [
+            {
+              "sender": {
+                "id": "USER_ID"
+              },
+              "recipient": {
+                "id": "PAGE_ID"
+              },
+              "timestamp": 1458692752478,
+              "message": {
+                "mid": "mid.1457764197618:41d102a3e1ae206a38",
+                "text": "goodbye, world!"
+              }
+            }
+          ]
+        }
+      ]
+    };
+    bot.handleFacebookData(data);
+    expect(comment.called).to.equal(false);
+  });
+
   it('can send a text message with quick replies', () => {
     const spy = sinon.spy(bot, 'sendRequest');
     const text = 'Hello world!';
