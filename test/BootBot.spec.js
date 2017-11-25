@@ -311,6 +311,70 @@ describe('BootBot', () => {
     expect(callback.calledWith(event)).to.equal(true);
   });
 
+  describe('bot.say() tests', () => {
+    it('should call sendTextMessage when calling .say() with a string', () => {
+      const spy = sinon.spy(bot, 'sendTextMessage');
+      const recipentId = 1234;
+      const message = 'hello world';
+      const options = {};
+
+      expect(spy.called).to.equal(false)
+
+      bot.say(recipentId, message, options)
+
+      expect(spy.calledWith(recipentId, message, [], options)).to.equal(true)
+    });
+
+    it('should call sendTextMessage with quick replies when calling .say() with an object ', () => {
+      const spy = sinon.spy(bot, 'sendTextMessage');
+      const recipentId = 1234;
+      const message = {
+        text: 'hello world',
+        quickReplies: ['a', 'b', 'c']
+      };
+      const options = {};
+
+      expect(spy.called).to.equal(false)
+
+      bot.say(recipentId, message, options)
+
+      expect(spy.calledWith(recipentId, message.text, message.quickReplies, options)).to.equal(true)
+    });
+
+    it('should call sendButtonTemplate when calling .say() with an object ', () => {
+      const spy = sinon.spy(bot, 'sendButtonTemplate');
+      const recipentId = 1234;
+      const message = {
+        text: 'hello world',
+        buttons: ['a', 'b', 'c']
+      };
+      const options = {};
+
+      expect(spy.called).to.equal(false)
+
+      bot.say(recipentId, message, options)
+
+      expect(spy.calledWith(recipentId, message.text, message.buttons, options)).to.equal(true)
+    });
+
+    it('should call sendAttachment when calling .say() with an object ', () => {
+      const spy = sinon.spy(bot, 'sendAttachment');
+      const recipentId = 1234;
+      const message = {
+        attachment: 'image',
+        url: 'https://google.com/logo.png',
+        quickReplies: ['a', 'b', 'c']
+      };
+      const options = {};
+
+      expect(spy.called).to.equal(false)
+
+      bot.say(recipentId, message, options)
+
+      expect(spy.calledWith(recipentId, message.attachment, message.url, message.quickReplies, options)).to.equal(true)
+    });
+  });
+
   describe('Messenger Profile API', () => {
     it('can set a greeting text', () => {
       const spy = sinon.spy(bot, 'sendProfileRequest');
