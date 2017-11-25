@@ -1,6 +1,6 @@
 {
   "name": "bootbot",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Facebook Messenger Bot Framework",
   "main": "index.js",
   "scripts": {
