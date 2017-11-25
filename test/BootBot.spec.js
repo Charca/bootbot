@@ -373,6 +373,29 @@ describe('BootBot', () => {
 
       expect(spy.calledWith(recipentId, message.attachment, message.url, message.quickReplies, options)).to.equal(true)
     });
+
+    it('should make subsequent calls to .say() when calling it with an array', (done) => {
+      bot.sendMessage = () => Promise.resolve()
+      const spy = sinon.spy(bot, 'say');
+      const recipentId = 1234;
+      const messages = [
+        'hello',
+        'world',
+        '!'
+      ];
+      const options = { typing: true };
+
+      expect(spy.called).to.equal(false)
+
+      bot.say(recipentId, messages, options).then(() => {
+        expect(spy.callCount).to.equal(4)
+        expect(spy.getCall(0).args).to.deep.equal([ recipentId, messages, options ])
+        expect(spy.getCall(1).args).to.deep.equal([ recipentId, messages[0], options ])
+        expect(spy.getCall(2).args).to.deep.equal([ recipentId, messages[1], options ])
+        expect(spy.getCall(3).args).to.deep.equal([ recipentId, messages[2], options ])
+        done()
+      })
+    });
   });
 
   describe('Messenger Profile API', () => {
