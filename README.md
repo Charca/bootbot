@@ -698,6 +698,39 @@ If `disableInput` is set to `true`, it will disable user input in the menu. The 
 
 Removes the Persistent Menu.
 
+----------------------
+
+### Bypassing Express
+
+You may only want to use bootbot for the Facebook related config and the simple to use Send API features but handle routing from somewhere else. Or there may be times where you want to send a message out of band, like if you get a postback callback and need to end a conversation flow immediately.
+
+Or maybe you don't want to use express but a different HTTP server.
+
+#### `.handleFacebookMessage(data)`
+
+Use this to send a message from a parsed webhook message directly to your bot.
+
+```js
+const linuxNewsBot   = new BootBot({argz});
+const appleNewsBot   = new BootBot({argz});
+const windowsNewsBot = new BootBot({argz});
+
+myNonExpressRouter.get("/mywebhook", (data) => {
+	const messages = data.entry[0].messaging;
+	messages.forEach(message => {
+		switch(data.entry.id) {
+			case LINUX_BOT_PAGE_ID:
+				linuxNewsBot.handleFacebookMessage(message);
+				break;
+			case APPLE_BOT_PAGE_ID:
+				appleNewsBot.handleFacebookMessage(message);
+				break;
+			// ...
+		};
+	});
+});
+```
+
 ## Examples
 
 Check the `examples` directory to see more demos of:
