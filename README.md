@@ -332,9 +332,10 @@ You'll likely use the Send API methods from the `Chat` or `Conversation` instanc
 
 Send a message to the user. The `.say()` method can be used to send text messages, button messages, messages with quick replies or attachments. If you want to send a different type of message (like a generic template), see the Send API method for that specific type of message.
 
-The `message` param can be a string or an object:
+The `message` param can be a string an array, or an object:
 
 - If `message` is a string, the bot will send a text message.
+- If `message` is an array, the `.say()` method will be called once for each element in the array.
 - If `message` is an object, the message type will depend on the object's format:
 
 ```javascript
@@ -361,6 +362,17 @@ chat.say({
 chat.say({
 	attachment: 'video',
 	url: 'http://example.com/video.mp4'
+});
+
+// Passing an array will make subsequent calls to the .say() method
+// For example, calling:
+
+chat.say(['Hello', 'How are you?']);
+
+// is the same as:
+
+chat.say('Hello').then(() => {
+  chat.say('How are you?')
 });
 ```
 
