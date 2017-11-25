@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.13] - 2017-11-10
+### Added
+- Support for custom webhook endpoint name.
+- New link to slack channel invite.
+
 ## [1.0.12] - 2017-04-14
 ### Added
 - Support for [Messenger Profile API](https://developers.facebook.com/docs/messenger-platform/messenger-profile).
@@ -36,7 +41,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Added generic error message for when Messenger's API responds with an 'error' node.
 
-[Unreleased]: https://github.com/Charca/bootbot/compare/v1.0.12...HEAD
+[Unreleased]: https://github.com/Charca/bootbot/compare/v1.0.13...HEAD
+[1.0.13]: https://github.com/Charca/bootbot/compare/v1.0.12...v1.0.13
 [1.0.12]: https://github.com/Charca/bootbot/compare/v1.0.11...v1.0.12
 [1.0.11]: https://github.com/Charca/bootbot/compare/v1.0.10...v1.0.11
 [1.0.10]: https://github.com/Charca/bootbot/compare/v1.0.9...v1.0.10
