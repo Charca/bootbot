@@ -737,7 +737,7 @@ You may only want to use bootbot for the Facebook related config and the simple 
 
 Or maybe you don't want to use express but a different HTTP server.
 
-#### `.handleFacebookMessage(data)`
+#### `.handleFacebookData(data)`
 
 Use this to send a message from a parsed webhook message directly to your bot.
 
@@ -751,10 +751,10 @@ myNonExpressRouter.get("/mywebhook", (data) => {
 	messages.forEach(message => {
 		switch(data.entry.id) {
 			case LINUX_BOT_PAGE_ID:
-				linuxNewsBot.handleFacebookMessage(message);
+				linuxNewsBot.handleFacebookData(message);
 				break;
 			case APPLE_BOT_PAGE_ID:
-				appleNewsBot.handleFacebookMessage(message);
+				appleNewsBot.handleFacebookData(message);
 				break;
 			// ...
 		};
