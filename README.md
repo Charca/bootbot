@@ -731,6 +731,26 @@ Removes the Persistent Menu.
 
 ----------------------
 
+### Setup the embedded Express server
+
+You may only want to set the behavior of the Express server running Bootbot. 
+
+#### `.use(expressMiddleware)`
+
+Use this method to add middlewares to the embedded Express server
+
+```javascript
+'use strict';
+const BootBot = require('bootbot');
+const cookieParser = require('cookie-parser');
+
+const bot = new BootBot();
+
+bot.use(cookieParser());
+
+bot.start();
+```
+
 ### Bypassing Express
 
 You may only want to use bootbot for the Facebook related config and the simple to use Send API features but handle routing from somewhere else. Or there may be times where you want to send a message out of band, like if you get a postback callback and need to end a conversation flow immediately.
