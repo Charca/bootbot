@@ -123,10 +123,7 @@ bot.hear('image', (payload, chat) => {
 - Start a conversation and keep the user's answers in `context`:
 
 ```javascript
-bot.hear('ask me something', (payload, chat) => {
-	chat.conversation((convo) => {
-		askName(convo);
-	});
+bot.hear('ask me something', (payload, chat) => {	
 
 	const askName = (convo) => {
 		convo.ask(`What's your name?`, (payload, convo) => {
@@ -150,6 +147,10 @@ bot.hear('ask me something', (payload, chat) => {
 	      - Favorite Food: ${convo.get('food')}`);
       convo.end();
 	};
+	
+	chat.conversation((convo) => {
+		askName(convo);
+	});
 });
 ```
 
