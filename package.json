@@ -3,6 +3,7 @@
   "version": "1.0.14",
   "description": "Facebook Messenger Bot Framework",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "mocha --recursive test/*",
     "test:watch": "npm test -- --watch"
