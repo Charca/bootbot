@@ -542,6 +542,8 @@ bot.hear('hello', (payload, chat) => {
 });
 ```
 
+Facebook Workplace's work chat feature uses a slightly different user format. The convenience method `bot.getWorkplaceUserProfile(userId)` is provided.
+
 ---
 
 ### Conversations
