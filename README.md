@@ -555,7 +555,7 @@ Messages sent by the user won't trigger a global `message`, `postback`, `attachm
 | Method signature |
 |:-----------------|
 | `chat.conversation(factory)` |
-| `bot.sendButtonTemplate(userId, factory)` |
+| `bot.conversation(userId, factory)` |
 
 Starts a new conversation with the user.
 
