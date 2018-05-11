@@ -123,7 +123,7 @@ bot.hear('image', (payload, chat) => {
 - Start a conversation and keep the user's answers in `context`:
 
 ```javascript
-bot.hear('ask me something', (payload, chat) => {	
+bot.hear('ask me something', (payload, chat) => {
 
 	const askName = (convo) => {
 		convo.ask(`What's your name?`, (payload, convo) => {
@@ -147,7 +147,7 @@ bot.hear('ask me something', (payload, chat) => {
 	      - Favorite Food: ${convo.get('food')}`);
       convo.end();
 	};
-	
+
 	chat.conversation((convo) => {
 		askName(convo);
 	});
@@ -401,6 +401,9 @@ The `options` param can contain:
 | `options` key | Type | Default | Description |
 |:--------------|:-----|:--------|:---------|
 | `typing` | boolean or number | `false` | Send a typing indicator before sending the message. If set to `true`, it will automatically calculate how long it lasts based on the message length. If it's a number, it will show the typing indicator for that amount of milliseconds (max. `20000` - 20 seconds) |
+| `messagingType` | string | `'RESPONSE'` | The messaging type of the message being sent. |
+| `notificationType` | string | | Push notification type: `'REGULAR'`: sound/vibration - `'SILENT_PUSH'`: on-screen notification only - `'NO_PUSH'`: no notification. |
+| `tag` | string | | The message tag string. Can only be used if `messagingType` is set to `'MESSAGE_TAG'` |
 | `onDelivery` | function | | Callback that will be executed when the message is received by the user. Receives params: `(payload, chat, data)` |
 | `onRead` | function | | Callback that will be executed when the message is read by the user. Receives params: `(payload, chat, data)` |
 
@@ -747,7 +750,7 @@ const linuxNewsBot   = new BootBot({argz});
 const appleNewsBot   = new BootBot({argz});
 const windowsNewsBot = new BootBot({argz});
 
-myNonExpressRouter.get("/mywebhook", (data) => {
+myNonExpressRouter.post("/mywebhook", (data) => {
 	const messages = data.entry[0].messaging;
 	messages.forEach(message => {
 		switch(data.entry.id) {

@@ -41,7 +41,8 @@ describe('BootBot', () => {
       },
       message: {
         text
-      }
+      },
+      messaging_type: 'RESPONSE'
     };
 
     bot.sendTextMessage(userId, text);
@@ -139,7 +140,8 @@ describe('BootBot', () => {
           title: 'Blue',
           payload: 'BOOTBOT_QR_BLUE'
         }]
-      }
+      },
+      messaging_type: 'RESPONSE'
     };
 
     bot.sendTextMessage(userId, text, quickReplies1);
@@ -175,7 +177,8 @@ describe('BootBot', () => {
           payload: 'BOOTBOT_QR_IMAGE',
           image_url: 'http://google.com/image.png'
         }]
-      }
+      },
+      messaging_type: 'RESPONSE'
     };
 
     bot.sendTextMessage(userId, text, quickReplies2);
@@ -204,11 +207,36 @@ describe('BootBot', () => {
         }, {
           foo: 'bar'
         }]
-      }
+      },
+      messaging_type: 'RESPONSE'
     };
 
     bot.sendTextMessage(userId, text, quickReplies3);
     expect(spy.calledWith(expected3)).to.equal(true);
+  });
+
+  it('can send a message with options', () => {
+    const spy = sinon.spy(bot, 'sendRequest');
+    const text = 'Hello world!';
+    const options = {
+      messagingType: 'MESSAGE_TAG',
+      notificationType: 'NO_PUSH',
+      tag: 'SHIPPING_UPDATE'
+    }
+    const expected = {
+      recipient: {
+        id: userId
+      },
+      message: {
+        text
+      },
+      messaging_type: 'MESSAGE_TAG',
+      notification_type: 'NO_PUSH',
+      tag: 'SHIPPING_UPDATE'
+    };
+
+    bot.sendTextMessage(userId, text, [], options);
+    expect(spy.calledWith(expected)).to.equal(true);
   });
 
   it('can send a button template', () => {
@@ -232,7 +260,8 @@ describe('BootBot', () => {
             buttons
           }
         }
-      }
+      },
+      messaging_type: 'RESPONSE'
     };
 
     bot.sendButtonTemplate(userId, text, buttons);
@@ -276,7 +305,8 @@ describe('BootBot', () => {
             elements
           }
         }
-      }
+      },
+      messaging_type: 'RESPONSE'
     };
 
     bot.sendGenericTemplate(userId, elements, options);
@@ -327,7 +357,8 @@ describe('BootBot', () => {
             buttons
           }
         }
-      }
+      },
+      messaging_type: 'RESPONSE'
     };
 
     bot.sendListTemplate(userId, elements, buttons, options);
@@ -349,7 +380,8 @@ describe('BootBot', () => {
             url
           }
         }
-      }
+      },
+      messaging_type: 'RESPONSE'
     };
 
     bot.sendAttachment(userId, type, url);
