@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.15] - 2018-05-10
+### Added
+- Added support for `messaging_type`, `notification_type` and `tag` message properties.
+- Added comments for JSDocs support.
+
 ## [1.0.14] - 2017-11-25
 ### Added
 - Added `handleFacebookData` method that lets you use BootBot's API without running the built-in Express server.
@@ -50,7 +55,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Added generic error message for when Messenger's API responds with an 'error' node.
 
-[Unreleased]: https://github.com/Charca/bootbot/compare/v1.0.14...HEAD
+[Unreleased]: https://github.com/Charca/bootbot/compare/v1.0.15...HEAD
+[1.0.15]: https://github.com/Charca/bootbot/compare/v1.0.14...v1.0.15
 [1.0.14]: https://github.com/Charca/bootbot/compare/v1.0.13...v1.0.14
 [1.0.13]: https://github.com/Charca/bootbot/compare/v1.0.12...v1.0.13
 [1.0.12]: https://github.com/Charca/bootbot/compare/v1.0.11...v1.0.12
