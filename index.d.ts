@@ -17,7 +17,7 @@ declare type EventType =
   | 'referral'
   ;
 
-declare type EventCallback = (payload: any, chat: SendApi, data: any) => void;
+declare type EventCallback = (payload: any, chat: Chat, data: any) => void;
 
 declare interface SendApiOptions {
   typing?: boolean;
@@ -65,7 +65,6 @@ declare interface AttachmentMessage {
   url: string;
 }
 
-
 declare type MessageType =
   string
   | string[]
@@ -96,53 +95,60 @@ declare interface UserProfile {
   }
 }
 
-declare class SendApi {
-  say(message: string | string[] | MessageType, options?: SendApiOptions): void;
+declare class Chat {
+  say(message: string | string[] | MessageType, options?: SendApiOptions): Promise<any>;
 
-  sendTextMessage(text: string, quickReplies?: string[], options?: SendApiOptions): void;
+  sendTextMessage(text: string, quickReplies?: string[], options?: SendApiOptions): Promise<any>;
 
-  sendButtonTemplate(text: string, buttons: Button[], options?: SendApiOptions): void;
+  sendButtonTemplate(text: string, buttons: Button[], options?: SendApiOptions): Promise<any>;
 
-  sendGenericTemplate(elements: Element[], options?: SendApiOptions): void;
+  sendGenericTemplate(elements: Element[], options?: SendApiOptions): Promise<any>;
 
-  sendListTemplate(elements: Element[], buttons: Button[], options?: SendApiOptions): void;
+  sendListTemplate(elements: Element[], buttons: Button[], options?: SendApiOptions): Promise<any>;
 
-  sendTemplate(payload: any, options?: SendApiOptions): void;
+  sendTemplate(payload: any, options?: SendApiOptions): Promise<any>;
 
-  sendAttachment(type: string, url: string, quickReplies?: string[], options?: SendApiOptions): void;
+  sendAttachment(type: string, url: string, quickReplies?: string[], options?: SendApiOptions): Promise<any>;
 
-  sendAction(action: Action, options?: SendApiOptions): void;
+  sendAction(action: Action, options?: SendApiOptions): Promise<any>;
 
-  sendMessage(message: any, options?: SendApiOptions): void;
+  sendMessage(message: any, options?: SendApiOptions): Promise<any>;
 
-  sendTypingIndicator(milliseconds: number): void;
+  sendProfileRequest(body: any, method: string): Promise<any>;
+
+  sendTypingIndicator(milliseconds: number): Promise<any>;
 
   getUserProfile(): Promise<UserProfile>;
 
-  conversation(factory: (convo: Conversation) => void);
+  conversation(factory: (convo: Conversation) => void): Conversation;
 }
 
 declare type ConversationCallback = (payload: any, convo: Conversation, data: any) => void;
 
-declare class Conversation extends SendApi {
+declare class Conversation extends Chat {
   ask(question: string | string[] | MessageType,
       answer: ConversationCallback,
       callbacks?: {
         event: string;
         callback: EventCallback;
       }[],
-      options?: SendApiOptions): void;
+      options?: SendApiOptions): Conversation;
 
   set(property: string, value: any): void;
 
   get(property: string): any;
+
+  isActive(): boolean;
+
+  isWaitingForAnswer(): boolean;
+
+  stopWaitingForAnswer(): void;
 
   end(): void;
 
   module(factory: (bot: BootBot) => void);
 
 }
-
 
 declare class BootBot {
   constructor(options: BootBotOptions);
@@ -153,41 +159,43 @@ declare class BootBot {
 
   on(event: EventType, callback: EventCallback): void;
 
-  hear(keywords: string | RegExp | any[], callback: EventCallback): void;
+  hear(keywords: string | RegExp | any[], callback: EventCallback): BootBot;
 
-  say(userId: string, message: string | string[] | MessageType, options?: SendApiOptions): void;
+  say(userId: string, message: string | string[] | MessageType, options?: SendApiOptions): Promise<any>;
 
-  sendTextMessage(userId: string, text: string, quickReplies?: string[], options?: SendApiOptions): void;
+  sendTextMessage(userId: string, text: string, quickReplies?: string[], options?: SendApiOptions): Promise<any>;
 
-  sendButtonTemplate(userId: string, text: string, buttons: Button[], options?: SendApiOptions): void;
+  sendButtonTemplate(userId: string, text: string, buttons: Button[], options?: SendApiOptions): Promise<any>;
 
-  sendGenericTemplate(userId: string, elements: Element[], options?: SendApiOptions): void;
+  sendGenericTemplate(userId: string, elements: Element[], options?: SendApiOptions): Promise<any>;
 
-  sendListTemplate(userId: string, elements: Element[], buttons: Button[], options?: SendApiOptions): void;
+  sendListTemplate(userId: string, elements: Element[], buttons: Button[], options?: SendApiOptions): Promise<any>;
 
-  sendTemplate(userId: string, payload: any, options?: SendApiOptions): void;
+  sendTemplate(userId: string, payload: any, options?: SendApiOptions): Promise<any>;
 
-  sendAttachment(userId: string, type: string, url: string, quickReplies?: string[], options?: SendApiOptions): void;
+  sendAttachment(userId: string, type: string, url: string, quickReplies?: string[], options?: SendApiOptions): Promise<any>;
 
-  sendAction(userId: string, action: Action, options?: SendApiOptions): void;
+  sendAction(userId: string, action: Action, options?: SendApiOptions): Promise<any>;
 
-  sendMessage(userId: string, message: any, options?: SendApiOptions): void;
+  sendMessage(userId: string, message: any, options?: SendApiOptions): Promise<any>;
 
-  sendTypingIndicator(userId: string, milliseconds: number): void;
+  sendRequest(body: any, endpoint: string, method: string): Promise<any>;
+
+  sendTypingIndicator(userId: string, milliseconds: number): Promise<any>;
 
   getUserProfile(userId: string): Promise<UserProfile>;
 
-  conversation(userId: string, factory: (convo: Conversation) => void);
+  conversation(userId: string, factory: (convo: Conversation) => void): Conversation;
 
-  setGreetingText(text: string): void;
+  setGreetingText(text: string): Promise<any>;
 
-  setGetStartedButton(action: string | Function): void;
+  setGetStartedButton(action: string | Function): Promise<any>;
 
-  deleteGetStartedButton(): void;
+  deleteGetStartedButton(): Promise<any>;
 
-  setPersistentMenu(buttons: string[] | any[], disableInput?: boolean = false): void;
+  setPersistentMenu(buttons: string[] | any[], disableInput?: boolean = false): Promise<any>;
 
-  deletePersistentMenu(): void;
+  deletePersistentMenu(): Promise<any>;
 
   handleFacebookData(data: any): void;
 }
