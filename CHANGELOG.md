@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- Fixed security vulnerability warning with `node-growl` library by upgrading `mocha` to v4.1.0.
 
 ## [1.0.15] - 2018-05-10
 ### Added
