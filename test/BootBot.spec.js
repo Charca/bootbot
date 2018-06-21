@@ -513,15 +513,16 @@ describe('BootBot', () => {
         '!'
       ];
       const options = { typing: true };
+      const pageId = 4321;
 
       expect(spy.called).to.equal(false)
 
-      bot.say(recipentId, messages, options).then(() => {
+      bot.say(recipentId, messages, options, pageId).then(() => {
         expect(spy.callCount).to.equal(4)
-        expect(spy.getCall(0).args).to.deep.equal([ recipentId, messages, options ])
-        expect(spy.getCall(1).args).to.deep.equal([ recipentId, messages[0], options ])
-        expect(spy.getCall(2).args).to.deep.equal([ recipentId, messages[1], options ])
-        expect(spy.getCall(3).args).to.deep.equal([ recipentId, messages[2], options ])
+        expect(spy.getCall(0).args).to.deep.equal([ recipentId, messages, options, pageId ])
+        expect(spy.getCall(1).args).to.deep.equal([ recipentId, messages[0], options, pageId ])
+        expect(spy.getCall(2).args).to.deep.equal([ recipentId, messages[1], options, pageId ])
+        expect(spy.getCall(3).args).to.deep.equal([ recipentId, messages[2], options, pageId ])
         done()
       })
     });
