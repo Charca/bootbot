@@ -746,11 +746,24 @@ Or maybe you don't want to use express but a different HTTP server.
 Use this to send a message from a parsed webhook message directly to your bot.
 
 ```js
-const bot   = new BootBot({argz});
+const dogBot     = new BootBot({argz});
+const catBot     = new BootBot({argz});
+const defaultBot = new BootBot({argz});
+
+const dogPageFacebookID = 111111111111111;
+const catPageFacebookID = 222222222222222;
 
 router.post("/mywebhook", function (req, res, next) {
-    bot.handleFacebookData(req.body);
-    res.sendStatus(200);
+    if(req.body.entry[0].ID == dogBotFacebookPageID){  
+        dogBot.handleFacebookData(req.body);
+        res.sendStatus(200);
+    } else if(req.body.entry[0].ID == catBotFacebookPageID) {
+        catBot.handleFacebookData(req.body);
+        res.sendStatus(200);
+    } else {
+        defaultBot.handleFacebookData(req.body);
+        res.sendStatus(200);
+    } 
 });
 ```
 
