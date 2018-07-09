@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [1.0.16] - 2018-07-09
+### Changed
+- Upgraded version of Graph API to 2.12.
+
 ### Fixed
 - Fixed security vulnerability warning with `node-growl` library by upgrading `mocha` to v4.1.0.
 
@@ -57,7 +62,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Added generic error message for when Messenger's API responds with an 'error' node.
 
-[Unreleased]: https://github.com/Charca/bootbot/compare/v1.0.15...HEAD
+[Unreleased]: https://github.com/Charca/bootbot/compare/v1.0.16...HEAD
+[1.0.16]: https://github.com/Charca/bootbot/compare/v1.0.15...v1.0.16
 [1.0.15]: https://github.com/Charca/bootbot/compare/v1.0.14...v1.0.15
 [1.0.14]: https://github.com/Charca/bootbot/compare/v1.0.13...v1.0.14
 [1.0.13]: https://github.com/Charca/bootbot/compare/v1.0.12...v1.0.13
