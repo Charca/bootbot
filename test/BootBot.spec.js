@@ -1,6 +1,7 @@
 'use strict';
 const expect = require('chai').expect;
 const sinon = require('sinon');
+const EventEmitter = require('events');
 const BootBot = require('../lib/BootBot');
 
 describe('BootBot', () => {
@@ -407,6 +408,54 @@ describe('BootBot', () => {
     bot.on('referral', callback);
     bot._handleEvent('referral', event);
     expect(callback.calledWith(event)).to.equal(true);
+  });
+
+  describe('bot._addConversation() tests', () => {
+    const createMockConvo = (userId) => {
+      const convo = new EventEmitter();
+
+      convo.userId = userId;
+
+      return convo;
+    };
+    let mockConvo;
+
+    beforeEach(() => {
+      mockConvo = createMockConvo(123);
+    });
+
+    it('should add conversation to _conversations list', () => {
+      expect(bot._conversations.length).to.equal(0);
+      bot._addConversation(mockConvo);
+      expect(bot._conversations).to.deep.equal([mockConvo]);
+    });
+
+    it('should add conversation to conversations by userId hash', () => {
+      expect(bot._conversationsByUserIdHash[mockConvo.userId]).to.equal(undefined);
+      bot._addConversation(mockConvo);
+      expect(bot._conversationsByUserIdHash[mockConvo.userId]).to.equal(mockConvo);
+    });
+
+    it('should clean up after conversation is ended', () => {
+      const convos = [createMockConvo(1), createMockConvo(2), createMockConvo(3)];
+
+      convos.forEach((convo) => bot._addConversation(convo));
+
+      expect(bot._conversationsByUserIdHash).to.deep.equal({1: convos[0], 2: convos[1], 3: convos[2]});
+      expect(bot._conversations).to.deep.equal(convos);
+
+      convos[1].emit('end', convos[1]);
+      expect(bot._conversationsByUserIdHash).to.deep.equal({1: convos[0], 3: convos[2]});
+      expect(bot._conversations).to.deep.equal([convos[0], convos[2]]);
+
+      convos[2].emit('end', convos[2]);
+      expect(bot._conversationsByUserIdHash).to.deep.equal({1: convos[0]});
+      expect(bot._conversations).to.deep.equal([convos[0]]);
+
+      convos[0].emit('end', convos[0]);
+      expect(bot._conversationsByUserIdHash).to.deep.equal({});
+      expect(bot._conversations).to.deep.equal([]);
+    });
   });
 
   describe('bot.say() tests', () => {
