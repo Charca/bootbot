@@ -189,6 +189,7 @@ Then use the provided HTTPS URL to config your webhook on Facebook's Dashboard. 
 | `appSecret` | string | | `Y` |
 | `webhook` | string | `"/webhook"` | `N` |
 | `broadcastEchoes` | boolean | `false` | `N` |
+| `graphApiVersion` | string | `v2.12` | `N` |
 
 Creates a new `BootBot` instance. Instantiates the new express app and all required webhooks. `options` param must contain all tokens and app secret of your Facebook app. Optionally, set `broadcastEchoes` to `true` if you want the messages your bot send to be echoed back to it (you probably don't need this feature unless you have multiple bots running on the same Facebook page).
 
