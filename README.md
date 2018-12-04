@@ -4,7 +4,7 @@
 
 BootBot is a simple but powerful JavaScript Framework to build Facebook Messenger's Chat bots.
 
-| [Features][] | [Usage][] | [Video Example][] | [Getting Started][] | [Documentation][] | [Examples][] | [Credits][] | [License][] |
+| [Features][] | [Usage][] | [Video Example][] | [Getting Started][] | [Documentation][] | [Database][] | [Examples][] | [Credits][] | [License][] |
 |---|---|---|---|---|---|---|---|
 
 
@@ -190,6 +190,8 @@ Then use the provided HTTPS URL to config your webhook on Facebook's Dashboard. 
 | `webhook` | string | `"/webhook"` | `N` |
 | `broadcastEchoes` | boolean | `false` | `N` |
 | `graphApiVersion` | string | `v2.12` | `N` |
+| `database` | string | `./{db}.json` | `N` |
+| `databaseDefault` | string | `system` | `N` |
 
 Creates a new `BootBot` instance. Instantiates the new express app and all required webhooks. `options` param must contain all tokens and app secret of your Facebook app. Optionally, set `broadcastEchoes` to `true` if you want the messages your bot send to be echoed back to it (you probably don't need this feature unless you have multiple bots running on the same Facebook page).
 
@@ -767,6 +769,10 @@ myNonExpressRouter.post("/mywebhook", (data) => {
 });
 ```
 
+## Database
+
+There is a built-in [Lowdb](https://github.com/typicode/lowdb) database function, which you can use via `bot.db` or `chat.db`
+
 ## Examples
 
 Check the `examples` directory to see more demos of:
@@ -777,6 +783,7 @@ Check the `examples` directory to see more demos of:
 - How to organize your code using modules
 - How to use the Messenger Profile API to set a Persistent Menu or a Get Started CTA
 - How to get the user's profile information
+- Usage database
 
 To run the examples, make sure to complete the `examples/config/default.json` file with your bot's tokens, and then cd into the `examples` folder and run the desired example with node. For example:
 
@@ -798,6 +805,7 @@ MIT
 [Video Example]:#video-example
 [Getting Started]:#getting-started
 [Documentation]:#documentation
+[Database]:#database
 [Examples]:#examples
 [Credits]:#credits
 [License]:#license
