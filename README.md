@@ -530,9 +530,13 @@ You can also use this method via the `typing` option (see [`.say()`](#say) metho
 
 | Method signature |
 |:-----------------|
-| `chat.getUserProfile()` |
-| `convo.getUserProfile()` |
-| `bot.getUserProfile(userId)` |
+| `chat.getUserProfile(fields)` |
+| `convo.getUserProfile(fields)` |
+| `bot.getUserProfile(userId, fields)` |
+
+| Param | Type | Default | Required |
+|:------|:-----|:--------|:---------|
+| `fields` | array | ['id', 'name', 'first_name', 'last_name', 'profile_pic']  | `N` |
 
 This method is not technically part of the "Send" API, but it's listed here because it's also shared between the `bot`, `chat` and `convo` instances.
 
@@ -543,6 +547,16 @@ bot.hear('hello', (payload, chat) => {
   chat.getUserProfile().then((user) => {
     chat.say(`Hello, ${user.first_name}!`);
   });
+
+  // or
+
+  const fields = ['locale', 'timezone', 'gender']; // change permissions
+
+  chat.getUserProfile(fields).then((user) => {
+      chat.say(`Hello, ${user.first_name}!`);
+      chat.say(`Your locale, ${user.locale}!`);
+  });
+
 });
 ```
 
