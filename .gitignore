@@ -42,5 +42,3 @@ examples/config/development.json
 examples/config/production.json
 .vscode/settings.json
 .idea/
-package-lock.json
-yarn.lock
