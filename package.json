@@ -1,6 +1,6 @@
 {
   "name": "bootbot",
-  "version": "1.0.14",
+  "version": "1.0.16",
   "description": "Facebook Messenger Bot Framework",
   "main": "index.js",
   "scripts": {
@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "^2.5.3",
+    "mocha": "^4.1.0",
     "sinon": "^1.17.4"
   }
 }
