@@ -203,6 +203,18 @@ If you want to specify a custom endpoint name for your webhook, you can do it wi
 
 Starts the express server on the specified port. Defaults port to 3000.
 
+#### `.getRouter()`
+Returns the express router, that BootBot uses. It can be [used](https://expressjs.com/en/guide/routing.html#express-router), when you can only use one port.
+
+
+##### `.getRouter()` examples:
+
+```javascript
+app.use('/bootbot', bot.getRouter());
+
+app.listen(3000, () => console.log('BootBot and Express are listening on port 3000!'));
+```
+
 #### `.close()`
 
 Closes the express server (calls `.close()` on the server instance).
