@@ -67,7 +67,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Added generic error message for when Messenger's API responds with an 'error' node.
 
-[Unreleased]: https://github.com/Charca/bootbot/compare/v1.0.16...HEAD
+[Unreleased]: https://github.com/Charca/bootbot/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/Charca/bootbot/compare/v1.0.16...v1.1.0
 [1.0.16]: https://github.com/Charca/bootbot/compare/v1.0.15...v1.0.16
 [1.0.15]: https://github.com/Charca/bootbot/compare/v1.0.14...v1.0.15
 [1.0.14]: https://github.com/Charca/bootbot/compare/v1.0.13...v1.0.14
