@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.0] - 2020-08-20
+### Added
+- Add `this.webhook` at bodyParser.use #158
+- Add Graph API version option to BootBot constructor #161
+
 ## [1.0.16] - 2018-07-09
 ### Changed
 - Upgraded version of Graph API to 2.12.
