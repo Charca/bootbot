@@ -12,9 +12,15 @@ const bot = new BootBot({
 bot.module(echoModule);
 
 bot.hear('hello', (payload, chat) => {
-  chat.getUserProfile().then((user) => {
+  const fields = ['locale', 'timezone', 'gender']; // change permissions
+  chat.getUserProfile(fields).then((user) => {
     chat.say(`Hello, ${user.first_name}!`);
   });
+
+  // or don't pass variable "fields"
+  /* chat.getUserProfile().then((user) => {
+    chat.say(`Hello, ${user.first_name}!`);
+  }); */
 });
 
 bot.start();
