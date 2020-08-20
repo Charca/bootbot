@@ -26,6 +26,7 @@ BootBot is a simple but powerful JavaScript Framework to build Facebook Messenge
 $ npm install bootbot --save
 ```
 
+### Without express
 ```javascript
 'use strict';
 const BootBot = require('bootbot');
@@ -42,6 +43,30 @@ bot.on('message', (payload, chat) => {
 });
 
 bot.start();
+```
+
+### With an existent express instance
+```javascript
+'use strict';
+const BootBot = require('bootbot');
+const express = require('express');
+const app = express();
+
+const bot = new BootBot({
+  accessToken: 'FB_ACCESS_TOKEN',
+  verifyToken: 'FB_VERIFY_TOKEN',
+  appSecret: 'FB_APP_SECRET'
+});
+
+bot.on('message', (payload, chat) => {
+  const text = payload.message.text;
+  chat.say(`Echo: ${text}`);
+});
+
+app.use(bot.middleware());
+app.listen(3000, ()=>{
+	console.log('listen on port 3000');
+});
 ```
 
 ## Video Example
