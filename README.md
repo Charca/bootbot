@@ -26,6 +26,8 @@ BootBot is a simple but powerful JavaScript Framework to build Facebook Messenge
 $ npm install bootbot --save
 ```
 
+For a usage with a proxy (without HTTPS)
+
 ```javascript
 'use strict';
 const BootBot = require('bootbot');
@@ -42,6 +44,32 @@ bot.on('message', (payload, chat) => {
 });
 
 bot.start();
+```
+
+For a usage with a HTTPS credidential
+
+```javascript
+'use strict';
+const BootBot = require('bootbot');
+
+const bot = new BootBot({
+  accessToken: 'FB_ACCESS_TOKEN',
+  verifyToken: 'FB_VERIFY_TOKEN',
+  appSecret: 'FB_APP_SECRET'
+});
+
+bot.on('message', (payload, chat) => {
+  const text = payload.message.text;
+  chat.say(`Echo: ${text}`);
+});
+
+const privateKey  = fs.readFileSync('key.pem', 'utf8');
+const certificate = fs.readFileSync('certchain.pem', 'utf8');
+
+const credentials = {key: privateKey, cert: certificate};
+
+// 3000 for the port, you can use undefined for the default port
+bot.start(3000, credentials);
 ```
 
 ## Video Example
@@ -154,10 +182,22 @@ bot.hear('ask me something', (payload, chat) => {
 });
 ```
 
-- Set up webhooks and start the express server:
+- Set up webhooks and start the express/HTTPS server:
 
+express
 ```javascript
 bot.start();
+```
+
+HTTPS
+```javascript
+const privateKey  = fs.readFileSync('key.pem', 'utf8');
+const certificate = fs.readFileSync('certchain.pem', 'utf8');
+
+const credentials = {key: privateKey, cert: certificate};
+
+// 3000 for the port, you can use undefined for the default port
+bot.start(3000, credentials);
 ```
 
 - Start up your bot by running node:
